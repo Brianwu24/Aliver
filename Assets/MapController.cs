@@ -22,9 +22,16 @@ public class MapGenerator : MonoBehaviour
         }
     }
 
+    public void Move(Vector3 translation)
+    {
+        this.transform.Translate(translation);
+    }
+
     // Update is called once per frame
     void Update()
     {
         // Debug.Log(_rng.NextFloat(0, 2.4f));
+        // this.transform.Translate(Vector3.right);
+            
     }
 }

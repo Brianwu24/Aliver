@@ -5,26 +5,48 @@ using UnityEngine;
 using MathF = System.MathF;
 using Random = Unity.Mathematics.Random;
 
-public class MapChunk
+public class PerlinNoise
 {
-    private Random _rng;
-    // private List<GameObject> _treeList;
-    private Vector3 _startingPos;
-    private int _numTrees;
+    // The origin of the sampled area in the plane.
+    public float orgX;
+    public float orgY;
+    
 
-    public MapChunk(List<GameObject> mapObjects, Transform parentTransform, Vector3 startingPos, int numTrees, float size = 10.0f)
+    private float[][] _noise;
+    private float _scale;
+
+    public PerlinNoise(int width, int height, float scale=0.3f)
     {
-        
-        this._rng = new Random((uint)UnityEngine.Random.Range(1, 100000));
-        _startingPos = startingPos;
-        _numTrees = numTrees;
-        // _startingPos += new Vector3();
-        
-        
-        for (int i=0; i< size; i++)
+        _scale = scale;
+        _noise = new float[height][];
+        for (int i = 0; i < _noise.Length; i++)
         {
-            // this._treeList.Add(GameObject.Instantiate(tree, _startingPos + new Vector3(), Quaternion.identity, parentTransform));
-            GameObject.Instantiate(mapObjects[0], _startingPos + new Vector3(this._rng.NextFloat(-size / 2, size / 2), this._rng.NextFloat(-size / 2, size / 2)), Quaternion.identity, parentTransform);
+            _noise[i] = new float[width];
+        }
+        for (float y = 0.0F; y < height; y++)
+        {
+            for (float x = 0.0F; x < width; x++)
+            {
+                float sample = Mathf.PerlinNoise(orgX + x * scale, orgY + y * _scale);
+                Debug.Log((x, y));
+                _noise[(int)y][(int)x] = sample;
+            }
+        }
+    }
+
+    public float[][] GetPerlinNoise()
+    {
+        return this._noise;
+    }
+
+    public void PrintNoise()
+    {
+        foreach (float[] row in _noise)
+        {
+            foreach (float value in row)
+            {
+                Debug.Log(value);
+            }
         }
     }
 }
@@ -36,46 +58,25 @@ public class MapController : MonoBehaviour
     private Random _rng;
 
     public GameObject mapObjects;
+    private PerlinNoise _mapNoise;
 
     private List<GameObject> _mapObjects;
-
-    private HashSet<MapChunk> _mapChunkSet = new HashSet<MapChunk>();
-    private MapChunk _chunk; 
-    // private List<MapChunk> _chunks;
-    // Start is called before the first frame update
+    
     
     // private void 
     void Start()
     {
         _gameController = gameController.GetComponent<GameController>();
         _player = _gameController.GetComponent<Player>();
-        
-        _mapObjects = new List<GameObject>();
-        foreach (Transform childObject in mapObjects.transform)
-        {
-            _mapObjects.Add(childObject.gameObject);
-        }
 
-        MapChunk _chunk = new MapChunk(_mapObjects, this.transform, new Vector3(), 5);
-        // _chunks.Add(new Chunk(tree, this.transform, new Vector3(), 1, 5));
-        // this._rng = new Random((uint)UnityEngine.Random.Range(1, 100000));
-        // _treeList = new List<GameObject>();
-        // for (int i=0; i< 20; i++)
-        // {
-        //     _treeList.Add(Instantiate(tree, new Vector3(this._rng.NextFloat(-10, 10), _rng.NextFloat(-10, 10)), Quaternion.identity, this.transform));
-        // }
-    }
+        _mapNoise = new PerlinNoise(10, 6);
+        _mapNoise.PrintNoise();
 
-    public void Move(Vector3 translation)
-    {
-        this.transform.Translate(translation);
     }
 
     // Update is called once per frame
     void Update()
     {
-        // Debug.Log(_rng.NextFloat(0, 2.4f));
-        // this.transform.Translate(Vector3.right);
-            
+    
     }
 }

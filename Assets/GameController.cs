@@ -21,7 +21,7 @@ public class GameController : MonoBehaviour
     public void Move(Vector3 translation)
     {
         _playerPosition += translation;
-        _mapController.Move(translation);
+        // _mapController.Move(translation);
     }
 
     public Vector3 GetPlayerPosition()

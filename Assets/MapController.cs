@@ -39,6 +39,7 @@ public class MapController : MonoBehaviour
 
     private List<GameObject> _mapObjects;
 
+    private HashSet<MapChunk> _mapChunkSet = new HashSet<MapChunk>();
     private MapChunk _chunk; 
     // private List<MapChunk> _chunks;
     // Start is called before the first frame update

@@ -36,6 +36,7 @@ public class PerlinNoise
         {
             for (int x = 0; x < row.Length; x++)
             {
+                // Normalize the values to that they all add up to 1
                 row[x] /= sum_samples;
             }
         }
@@ -71,8 +72,30 @@ public class MapController : MonoBehaviour
     private float[][] _mapNoise;
 
 
-    public void CreateTrees(float[][] noise, float scale)
+    public List<GameObject> CreateTrees(List<GameObject> trees, float[][] noise, float scale)
     {
+        List<GameObject> treeList = new List<GameObject>();
+        for (int y = 0; y < _mapNoise.GetLength(0); y++)
+        {
+            for (int x = 0; x < noise[y].Length; x++)
+            {
+                float probability = noise[y][x];
+                if (probability + 0.04>= _rng.NextFloat(0f, 1f))
+                {
+                    // Choose a random tree
+                    treeList.Add(Instantiate(trees[_rng.NextInt(0, trees.Count)], new Vector3(x * scale - 10 + _rng.NextFloat(-1, 1), y * scale - 6 + _rng.NextFloat(-1, 1)), Quaternion.identity,
+                        this.transform));
+
+                    noise[y][x] = 0;
+                }
+            }
+        }
+
+        return treeList;
+    }
+    public List<GameObject> CreateRocks(List<GameObject> rocks, float[][] noise, float scale)
+    {
+        List<GameObject> rockList = new List<GameObject>();
         for (int y = 0; y < _mapNoise.GetLength(0); y++)
         {
             int x = 0;
@@ -80,13 +103,16 @@ public class MapController : MonoBehaviour
             {
                 if (probability + 0.04>= _rng.NextFloat(0f, 1f))
                 {
-                    Instantiate(_trees[0], new Vector3(x * scale - 10 + _rng.NextFloat(-1, 1), y * scale - 6 + _rng.NextFloat(-1, 1)), Quaternion.identity,
-                        this.transform);
+                    // choose a random rock
+                    rockList.Add(Instantiate(rocks[_rng.NextInt(0, rocks.Count)], new Vector3(x * scale - 10 + _rng.NextFloat(-1, 1), y * scale - 6 + _rng.NextFloat(-1, 1)), Quaternion.identity,
+                        this.transform));
                 }
                 x++;
             }
         }
+        return rockList;
     }
+
 
 
     // private void 
@@ -105,7 +131,7 @@ public class MapController : MonoBehaviour
 
         float scale = 0.5f;
         _mapNoise = new PerlinNoise(20, 12, scale).GetPerlinNoise();
-        CreateTrees(_mapNoise, scale);
+        CreateTrees(_mapObjects, _mapNoise, scale);
 
     }
 

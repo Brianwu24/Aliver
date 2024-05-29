@@ -65,10 +65,12 @@ public class MapController : MonoBehaviour
     private Player _player;
     private Random _rng;
 
-    public GameObject mapObjects;
-    private List<GameObject> _mapObjects;
-    private List<GameObject> _trees;
-
+    public GameObject treeObjects;
+    private List<GameObject> _treeObjects;
+    
+    public GameObject rockObjects;
+    private List<GameObject> _rockObjects;
+    
     private float[][] _mapNoise;
 
 
@@ -83,7 +85,7 @@ public class MapController : MonoBehaviour
                 if (probability + 0.04>= _rng.NextFloat(0f, 1f))
                 {
                     // Choose a random tree
-                    treeList.Add(Instantiate(trees[_rng.NextInt(0, trees.Count)], new Vector3(x * scale - 10 + _rng.NextFloat(-1, 1), y * scale - 6 + _rng.NextFloat(-1, 1)), Quaternion.identity,
+                    treeList.Add(Instantiate(trees[_rng.NextInt(0, trees.Count)], new Vector3(x * scale - 10 + _rng.NextFloat(-1, 1), y * scale - 6 + _rng.NextFloat(-1, 1), 1), Quaternion.identity,
                         this.transform));
 
                     noise[y][x] = 0;
@@ -101,10 +103,10 @@ public class MapController : MonoBehaviour
             int x = 0;
             foreach (float probability in noise[y])
             {
-                if (probability + 0.04>= _rng.NextFloat(0f, 1f))
+                if (probability + 0.035>= _rng.NextFloat(0f, 1f))
                 {
                     // choose a random rock
-                    rockList.Add(Instantiate(rocks[_rng.NextInt(0, rocks.Count)], new Vector3(x * scale - 10 + _rng.NextFloat(-1, 1), y * scale - 6 + _rng.NextFloat(-1, 1)), Quaternion.identity,
+                    rockList.Add(Instantiate(rocks[_rng.NextInt(0, rocks.Count)], new Vector3(x * scale - 10 + _rng.NextFloat(-1, 1), y * scale - 6 + _rng.NextFloat(-1, 1), 1), Quaternion.identity,
                         this.transform));
                 }
                 x++;
@@ -123,15 +125,22 @@ public class MapController : MonoBehaviour
         _player = _gameController.GetComponent<Player>();
 
 
-        _mapObjects = new List<GameObject>();
-        foreach (Transform child in mapObjects.transform)
+        _treeObjects = new List<GameObject>();
+        foreach (Transform child in treeObjects.transform)
         {
-            _mapObjects.Add(child.gameObject);
+            _treeObjects.Add(child.gameObject);
+        }
+
+        _rockObjects = new List<GameObject>();
+        foreach (Transform child in rockObjects.transform)
+        {
+            _rockObjects.Add(child.gameObject);
         }
 
         float scale = 0.5f;
         _mapNoise = new PerlinNoise(20, 12, scale).GetPerlinNoise();
-        CreateTrees(_mapObjects, _mapNoise, scale);
+        CreateTrees(_treeObjects, _mapNoise, scale);
+        CreateRocks(_rockObjects, _mapNoise, scale);
 
     }
 

@@ -6,15 +6,14 @@ public class Player : MonoBehaviour
     private GameController _gameController;
     
     //movement
-    public float moveSpeed;
-    Rigidbody2D rb;
-    Vector2 moveDir;
+    private Rigidbody2D _rb;
+    private Vector2 _moveDir;
 
     // Start is called before the first frame update
     void Start()
     {
         _gameController = gameController.GetComponent<GameController>();
-        rb = GetComponent<Rigidbody2D>();
+        _rb = GetComponent<Rigidbody2D>();
     }
     
     void InputManagement()
@@ -22,12 +21,12 @@ public class Player : MonoBehaviour
         float moveX = Input.GetAxisRaw("Horizontal");
         float moveY = Input.GetAxisRaw("Vertical");
 
-        moveDir = new Vector2(moveX, moveY).normalized;
+        _moveDir = new Vector2(moveX, moveY).normalized;
     }
 
     private void Move()
     {
-        rb.velocity = new Vector2(moveDir.x * moveSpeed, moveDir.y * moveSpeed);
+        _rb.velocity = new Vector2(_moveDir.x * _gameController.GetPlayerSpeed(), _moveDir.y * _gameController.GetPlayerSpeed());
     }
 
     // Update is called once per frame

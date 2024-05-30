@@ -1334,7 +1334,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameController: {fileID: 2077496799}
-  moveSpeed: 2.7
 --- !u!50 &346707568
 Rigidbody2D:
   serializedVersion: 4
@@ -5779,7 +5778,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a53add9ad8a80924b84d7250bee00e57, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerSpeed: 2.7
   player: {fileID: 346707566}
+  enemySpeed: 0
   mapController: {fileID: 488181675}
 --- !u!4 &2077496801
 Transform:

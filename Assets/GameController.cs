@@ -4,29 +4,36 @@ using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
+    public float playerSpeed;
     public GameObject player;
-    private Vector3 _playerPosition;
+    private Player _player;
 
+    public float enemySpeed;
+    
+    
     public GameObject mapController;
-
     private MapController _mapController;
     // Start is called before the first frame update
-    
+
     void Start()
     {
+        _player = player.GetComponent<Player>();
         _mapController = mapController.GetComponent<MapController>();
-        _playerPosition = new Vector3();
     }
-    
-    public void Move(Vector3 translation)
+
+    public float GetPlayerSpeed()
     {
-        _playerPosition += translation;
-        // _mapController.Move(translation);
+        return playerSpeed;
+    }
+
+    public float GetEnemySpeed()
+    {
+        return enemySpeed;
     }
 
     public Vector3 GetPlayerPosition()
     {
-        return _playerPosition;
+        return _player.transform.position;
     }
 
     // Update is called once per frame

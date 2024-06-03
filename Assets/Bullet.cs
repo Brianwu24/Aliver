@@ -10,7 +10,6 @@ public class Bullet : MonoBehaviour
     {
         _damage = 1;
     }
-
     public float GetDamage()
     {
         return _damage;

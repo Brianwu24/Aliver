@@ -1334,6 +1334,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameController: {fileID: 2077496799}
+  enemyManager: {fileID: 692379173}
+  bulletObject: {fileID: 551418576}
 --- !u!50 &346707568
 Rigidbody2D:
   serializedVersion: 4
@@ -2133,7 +2135,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dbf00d32b960d4244b9bb5e9d6b418c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 1
+  gameController: {fileID: 2077496799}
+  enemyManager: {fileID: 692379173}
 --- !u!58 &551418578
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -6362,7 +6365,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerSpeed: 3
   playerShootSpeed: 0
-  bulletSpeed: 0
+  bulletSpeed: 2
   player: {fileID: 346707566}
   enemySpeed: 1
   mapController: {fileID: 488181675}

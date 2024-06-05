@@ -5,19 +5,24 @@ using UnityEngine;
 public class Bullet : MonoBehaviour
 {
     // Start is called before the first frame update
-    public float _damage;
+    public GameObject gameController;
+    private GameController _gameController;
+
+    public GameObject enemyManager;
+    private EnemyManager _enemyManager;
+    
+    private float _damage;
     private Vector3 _directionSpeedVector;
     private Rigidbody2D _rb;
     void Start()
     {
+        _gameController = gameController.GetComponent<GameController>();
+        _enemyManager = enemyManager.GetComponent<EnemyManager>();
         _damage = 1;
         _directionSpeedVector = new Vector3();
         _rb = GetComponent<Rigidbody2D>();
-    }
 
-    public void SetDirectionSpeed(Vector3 directionSpeedVector)
-    {
-        _directionSpeedVector = directionSpeedVector;
+        _directionSpeedVector = (_enemyManager.GetPriorityEnemyPosition() -_gameController.GetPlayerPosition()).normalized * _gameController.GetBulletSpeed();
     }
     public float GetDamage()
     {

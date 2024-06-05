@@ -31,7 +31,12 @@ public class EnemyManager : MonoBehaviour
     public Vector3 GetPriorityEnemyPosition()
     {
         // Do some sort of sorting and pick the 0th index to get the best enemy to shoot
-        return _enemies[0].transform.position;
+        if (_enemies.Count > 1)
+        {
+            return _enemies[0].transform.position;
+        }
+        return new Vector3();
+        
     }
     
 

@@ -71,7 +71,7 @@ public class EnemyController: MonoBehaviour
     private Rigidbody2D _rb;
     private Transform _transform;
     private float _speed;
-    [CanBeNull] private BaseEnemy _enemy;
+    private BaseEnemy _enemy;
     
     
     void Start()

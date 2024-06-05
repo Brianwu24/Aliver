@@ -5,6 +5,8 @@ using UnityEngine;
 public class GameController : MonoBehaviour
 {
     public float playerSpeed;
+    public float playerShootSpeed;
+    public float bulletSpeed;
     public GameObject player;
     private Player _player;
 
@@ -24,6 +26,16 @@ public class GameController : MonoBehaviour
     public float GetPlayerSpeed()
     {
         return playerSpeed;
+    }
+
+    public float GetPlayerShootSpeed()
+    {
+        return playerShootSpeed;
+    }
+
+    public float GetBulletSpeed()
+    {
+        return bulletSpeed;
     }
 
     public float GetEnemySpeed()

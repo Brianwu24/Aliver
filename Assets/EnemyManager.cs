@@ -27,6 +27,12 @@ public class EnemyManager : MonoBehaviour
         newEnemyController.SetEnemyType("FastEnemy");
         _enemies.Add(newEnemy);
     }
+
+    public Vector3 GetPriorityEnemyPosition()
+    {
+        // Do some sort of sorting and pick the 0th index to get the best enemy to shoot
+        return _enemies[0].transform.position;
+    }
     
 
     // Update is called once per frame

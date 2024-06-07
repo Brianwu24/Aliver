@@ -7,6 +7,7 @@ public class Boundaries : MonoBehaviour {
     private Vector2 screenBounds;
     private float objectWidth;
     private float objectHeight;
+    private float xMargin = 6f;
 
     // Use this for initialization
     void Start () {
@@ -18,7 +19,7 @@ public class Boundaries : MonoBehaviour {
     // Update is called once per frame
     void LateUpdate(){
         Vector3 viewPos = transform.position;
-        viewPos.x = Mathf.Clamp(viewPos.x, screenBounds.x * -1 + objectWidth, screenBounds.x - objectWidth);
+        viewPos.x = Mathf.Clamp(viewPos.x, screenBounds.x * -1 + objectWidth + xMargin, screenBounds.x - objectWidth - xMargin);
         viewPos.y = Mathf.Clamp(viewPos.y, screenBounds.y * -1 + objectHeight, screenBounds.y - objectHeight);
         transform.position = viewPos;
     }

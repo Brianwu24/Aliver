@@ -16,6 +16,7 @@ public class Player : MonoBehaviour
     private Rigidbody2D _rb;
     private Vector2 _moveDir;
     private Transform _transform;
+    public float speed = 6f;
 
     // Start is called before the first frame update
     void Start()

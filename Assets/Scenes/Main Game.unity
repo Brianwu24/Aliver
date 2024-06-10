@@ -3338,7 +3338,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 542143f82f5033a43b07013ad5806f27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemySpawnTime: 0.1
+  enemySpawnTime: 0.01
   gameController: {fileID: 2077496799}
   basicEnemyObject: {fileID: 2036009462}
 --- !u!1 &703774127
@@ -6980,7 +6980,7 @@ GameObject:
   - component: {fileID: 2036009463}
   m_Layer: 0
   m_Name: Enemy
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -24,6 +25,15 @@ public class Bullet : MonoBehaviour
 
         _directionSpeedVector = (_enemyManager.GetPriorityEnemyPosition() -_gameController.GetPlayerPosition()).normalized * _gameController.GetBulletSpeed();
     }
+
+    public void OnCollisionEnter2D(Collision2D other)
+    {
+        if (other.gameObject.CompareTag("Enemy"))
+        {
+            Destroy(gameObject);
+        }
+    }
+
     public float GetDamage()
     {
         return _damage;

@@ -19,7 +19,7 @@ public class GameController : MonoBehaviour
 
     void Start()
     {
-        _player = player.GetComponent<Player>();
+        // _player = player.GetComponent<Player>();
         _mapController = mapController.GetComponent<MapController>();
     }
 
@@ -45,7 +45,7 @@ public class GameController : MonoBehaviour
 
     public Vector3 GetPlayerPosition()
     {
-        return _player.transform.position;
+        return player.transform.position;
     }
 
     // Update is called once per frame

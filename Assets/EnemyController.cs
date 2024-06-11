@@ -1,10 +1,5 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using JetBrains.Annotations;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
-using UnityEngine.UIElements;
 
 public class BaseEnemy
 {
@@ -87,14 +82,18 @@ public class EnemyController: MonoBehaviour
         {
             _speed = 1f;
             _enemy = new BaseEnemy(_gameController, _transform, 1f, 1f);
-            Debug.Log(_enemy.GetHealth());
         }
         else if (type == "FastEnemy")
         {
-            _speed = 1.3f;
-            _enemy = new FastEnemy(_gameController,  _transform, 1f, 1f);
+            _speed = 2f;
+            _enemy = new FastEnemy(_gameController,  _transform, 10f, 1f);
         }
             
+    }
+
+    public float GetHealth()
+    {
+        return _enemy.GetHealth();
     }
     
     public void Move()
@@ -109,10 +108,10 @@ public class EnemyController: MonoBehaviour
         {
             Bullet collidedBullet = other.gameObject.GetComponent<Bullet>();
             this._enemy.TakeDamage(collidedBullet.GetDamage());
-            if (0 >= _enemy.GetHealth())
-            {
-                Destroy(gameObject);
-            }
+            // if (0 >= _enemy.GetHealth())
+            // {
+            //     // Destroy(gameObject);
+            // }
         }
     }
 

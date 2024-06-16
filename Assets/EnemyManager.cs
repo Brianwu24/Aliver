@@ -27,11 +27,11 @@ public class EnemyManager : MonoBehaviour
         _transform = GetComponent<Transform>();
 
         _enemies = new List<GameObject>();
-        // Instantiate other gameObjects that are different sprites for different enemies along with different speeds
-        // GameObject newEnemy = Instantiate(wolf1, new Vector3(), Quaternion.identity, this.transform);
-        // EnemyController newEnemyController = newEnemy.GetComponent<EnemyController>();
-        // newEnemyController.SetEnemyType("FastEnemy");
-        // _enemies.Add(newEnemy);
+    }
+
+    public void DestroyEnemy()
+    {
+        
     }
 
     private void _DestroyEnemies()
@@ -56,7 +56,7 @@ public class EnemyManager : MonoBehaviour
         this._DestroyEnemies();
         if (_enemies != null && _enemies.Count > 0)
         {
-            if (_enemies.Count > 1)
+            if (_enemies.Count == 1)
             {
                 return _enemies[0].transform.position;
             }
@@ -66,7 +66,7 @@ public class EnemyManager : MonoBehaviour
 
             for (int cursor = 0; cursor < _enemies.Count - 1; cursor++)
             {
-                for (int i = 0; i + cursor < _enemies.Count; i++)
+                for (int i = cursor + 1; i < _enemies.Count; i++)
                 {
 
                     GameObject a = _enemies[cursor];
@@ -86,12 +86,6 @@ public class EnemyManager : MonoBehaviour
 
                 }
             }
-            // Debug.Log("start");
-            // foreach (GameObject enemy in _enemies)
-            // {
-            //     Debug.Log(enemy.GetComponent<EnemyController>().GetPriority());
-            // }
-            // Debug.Log("end");
             return _enemies[0].transform.position;
 
 
@@ -100,7 +94,7 @@ public class EnemyManager : MonoBehaviour
 
         }
 
-        return new Vector3(Random.Range(0f, 10f), Random.Range(0f, 10f));
+        return new Vector3(Random.Range(-10f, 10f), Random.Range(-10f, 10f));
         
     }
     
@@ -112,7 +106,7 @@ public class EnemyManager : MonoBehaviour
         if (_timeFromLastEnemySpawn >= enemySpawnTime)
         {
 
-            Vector3 spawnPosition = _gameController.GetPlayerPosition() +  new Vector3(Random.Range(0f, 10f), Random.Range(0f, 15f));
+            Vector3 spawnPosition = _gameController.GetPlayerPosition() +  new Vector3(Random.Range(-10f, 10f), Random.Range(-10f, 15f));
             string enemyType = "BaseEnemy";
             GameObject enemyObject = wolf1;
             float randomNum = Random.Range(0, 1f);

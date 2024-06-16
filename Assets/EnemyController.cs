@@ -75,9 +75,9 @@ public class EnemyController: MonoBehaviour
         this.gameObject.SetActive(true);
         _gameController = gameController.GetComponent<GameController>();
         _rb = GetComponent<Rigidbody2D>();
-        Debug.Log("2");
+        // Debug.Log("2");
         this._transform = GetComponent<Transform>();
-        Debug.Log(GetComponent<Transform>().position);
+        // Debug.Log(GetComponent<Transform>().position);
     }
     
     public void SetEnemyType(string type)
@@ -104,6 +104,11 @@ public class EnemyController: MonoBehaviour
     {
         return _enemy.GetHealth();
     }
+
+    public float GetDamage()
+    {
+        return _enemy.GetDamage();
+    }
     
     public void Move()
     {
@@ -113,14 +118,12 @@ public class EnemyController: MonoBehaviour
 
     public float GetDistanceFromPlayer()
     {
-        Debug.Log("Called 1");
-        Debug.Log(this._transform.position);
         return (_gameController.GetPlayerPosition() - this._transform.position).magnitude;
     }
 
     public float GetPriority()
     {
-        return (_speed * 0.1f) * (_enemy.GetHealth() * 0.15f) * (1000 / GetDistanceFromPlayer() * 0.75f);
+        return (_speed * 0.2f) * (_enemy.GetHealth() * 0.05f) * ((1/GetDistanceFromPlayer()) * 5);
     }
 
     public void OnCollisionEnter2D(Collision2D other)

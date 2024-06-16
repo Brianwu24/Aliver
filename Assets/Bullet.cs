@@ -19,6 +19,9 @@ public class Bullet : MonoBehaviour
     {
         _gameController = gameController.GetComponent<GameController>();
         _enemyManager = enemyManager.GetComponent<EnemyManager>();
+
+        string bulletType = gameObject.name;
+        
         _damage = 1;
         _directionSpeedVector = new Vector3();
         _rb = GetComponent<Rigidbody2D>();

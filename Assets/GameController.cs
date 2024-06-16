@@ -11,6 +11,8 @@ public class GameController : MonoBehaviour
     private Player _player;
 
     public float enemySpeed;
+
+    public string bulletType;
     
     
     public GameObject mapController;
@@ -36,6 +38,11 @@ public class GameController : MonoBehaviour
     public float GetBulletSpeed()
     {
         return bulletSpeed;
+    }
+
+    public string GetBulletType()
+    {
+        return bulletType;
     }
 
     public float GetEnemySpeed()

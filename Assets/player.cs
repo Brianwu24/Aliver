@@ -48,6 +48,34 @@ public class Player : MonoBehaviour
 
         _health = 20f;
     }
+
+    public Vector3 GetPosition()
+    {
+        return transform.position;
+    }
+
+    public void SetPosition(Vector3 newPosition)
+    {
+        transform.position = newPosition;
+    }
+
+    public float GetHealth()
+    {
+        return _health;
+    }
+
+    public void SetHealth(float newHealth)
+    {
+        if (newHealth > 0)
+        {
+            _health = newHealth;
+        }
+        else
+        {
+            Destroy(gameObject);
+            // This will cause the object to be destroyed
+        }
+    }
     
     void InputManagement()
     {
@@ -66,8 +94,7 @@ public class Player : MonoBehaviour
     {
         _rb.velocity = new Vector2(_moveDir.x * _gameController.GetPlayerSpeed(), _moveDir.y * _gameController.GetPlayerSpeed());
     }
-
-    // Update is called once per frame
+    
 
     private void FixedUpdate()
     {
@@ -77,17 +104,8 @@ public class Player : MonoBehaviour
 
     private void Shoot()
     {
-        // Vector3 position = this._transform.position;
-        // Vector3 directionVector = (_enemyManager.GetPriorityEnemyPosition() - position).normalized;
-        // if (directionVector == new Vector3())
-        // {
-        //     
-        // }
-        // Debug.Log(directionVector);
-        
         GameObject newBullet = Instantiate(basicBulletObject, _transform.position, Quaternion.identity, _transform);
         newBullet.SetActive(true);
-        // newBullet.GetComponent<Bullet>().SetDirectionSpeed(directionVector * _gameController.GetBulletSpeed());
     }
 
     public void OnCollisionEnter2D(Collision2D other)

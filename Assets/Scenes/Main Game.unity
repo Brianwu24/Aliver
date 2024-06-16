@@ -8342,8 +8342,9 @@ MonoBehaviour:
   bulletSpeed: 2
   player: {fileID: 346707566}
   enemySpeed: 1
-  bulletType: 
+  bulletType: Basic
   mapController: {fileID: 488181675}
+  enemyManager: {fileID: 692379173}
 --- !u!4 &2077496801
 Transform:
   m_ObjectHideFlags: 0

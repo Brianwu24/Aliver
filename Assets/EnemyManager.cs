@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
-
+using System.Globalization;
+using System.IO;
 using UnityEngine;
 
 // public class  
@@ -29,9 +30,29 @@ public class EnemyManager : MonoBehaviour
         _enemies = new List<GameObject>();
     }
 
-    public void DestroyEnemy()
+    public void CreateEnemy(Vector3 spawnPosition, string enemyType, float enemyHealth)
     {
-        
+        GameObject enemyObject = wolf1;
+        if (enemyType == "FastEnemy")
+        {
+            enemyObject = wolf2;
+        }
+        else
+        {
+            enemyObject = wolf3;
+        }
+        GameObject newEnemy = Instantiate(enemyObject, spawnPosition, Quaternion.identity, this.transform);
+        newEnemy.SetActive(true);
+        EnemyController newEnemyController = newEnemy.GetComponent<EnemyController>();
+        newEnemyController.SetEnemyType(enemyType);
+        newEnemyController.SetHealth(enemyHealth);
+        _enemies.Add(newEnemy);
+    }
+    
+
+    public List<GameObject> GetEnemies()
+    {
+        return _enemies;
     }
 
     private void _DestroyEnemies()

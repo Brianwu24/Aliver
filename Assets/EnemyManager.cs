@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using Random = Unity.Mathematics.Random;
+
 using UnityEngine;
 
 // public class  
@@ -10,27 +10,28 @@ public class EnemyManager : MonoBehaviour
     // Start is called before the first frame update
     public GameObject gameController;
     private GameController _gameController;
-    public GameObject basicEnemyObject;
+    
+    public GameObject wolf1;
+    public GameObject wolf2;
+    public GameObject wolf3;
 
     private Transform _transform;
     private Rigidbody2D _rb;
 
     private List<GameObject> _enemies;
     private float _timeFromLastEnemySpawn;
-    private Random _rng;
     
     void Start()
     {
-        _rng = new Random((uint)UnityEngine.Random.Range(1, 100000));
         _gameController = gameController.GetComponent<GameController>();
         _transform = GetComponent<Transform>();
 
         _enemies = new List<GameObject>();
         // Instantiate other gameObjects that are different sprites for different enemies along with different speeds
-        GameObject newEnemy = Instantiate(basicEnemyObject, new Vector3(), Quaternion.identity, this.transform);
-        EnemyController newEnemyController = newEnemy.GetComponent<EnemyController>();
-        newEnemyController.SetEnemyType("FastEnemy");
-        _enemies.Add(newEnemy);
+        // GameObject newEnemy = Instantiate(wolf1, new Vector3(), Quaternion.identity, this.transform);
+        // EnemyController newEnemyController = newEnemy.GetComponent<EnemyController>();
+        // newEnemyController.SetEnemyType("FastEnemy");
+        // _enemies.Add(newEnemy);
     }
 
     private void _DestroyEnemies()
@@ -53,11 +54,53 @@ public class EnemyManager : MonoBehaviour
     {
         // Do some sort of sorting and pick the 0th index to get the best enemy to shoot
         this._DestroyEnemies();
-        if (_enemies is { Count: > 0 })
+        if (_enemies != null && _enemies.Count > 0)
         {
+            if (_enemies.Count > 1)
+            {
+                return _enemies[0].transform.position;
+            }
+
+            // Sort the _enemies list based on GetPriority
+            // Exchange Sort
+
+            for (int cursor = 0; cursor < _enemies.Count - 1; cursor++)
+            {
+                for (int i = 0; i + cursor < _enemies.Count; i++)
+                {
+
+                    GameObject a = _enemies[cursor];
+                    GameObject b = _enemies[i];
+                    if (a.GetComponent<EnemyController>().GetPriority() <
+                        b.GetComponent<EnemyController>().GetPriority())
+                    {
+                        // What rider has in store for me, I decided not to use this!
+                        // (_enemies[cursor], _enemies[i]) = (_enemies[i], _enemies[cursor]);
+                        
+                        // store in temp
+                        GameObject temp = a; // This will be temp a
+                        // Perform swap
+                        _enemies[cursor] = b; // Swap a with b
+                        _enemies[i] = temp; // Swap b with temp a
+                    }
+
+                }
+            }
+            // Debug.Log("start");
+            // foreach (GameObject enemy in _enemies)
+            // {
+            //     Debug.Log(enemy.GetComponent<EnemyController>().GetPriority());
+            // }
+            // Debug.Log("end");
             return _enemies[0].transform.position;
+
+
+            // Sort based on priority calculated by a weighed sum of
+            // (enemy speed * 0.1) * (health 0.15) * (distance from player * 75)
+
         }
-        return new Vector3();
+
+        return new Vector3(Random.Range(0f, 10f), Random.Range(0f, 10f));
         
     }
     
@@ -69,24 +112,25 @@ public class EnemyManager : MonoBehaviour
         if (_timeFromLastEnemySpawn >= enemySpawnTime)
         {
 
-            Vector3 spawnPosition = _gameController.GetPlayerPosition() + new Vector3(_rng.NextFloat(0, 10), _rng.NextFloat(0, 20));
-            GameObject newEnemy = Instantiate(basicEnemyObject, spawnPosition, Quaternion.identity, this.transform);
+            Vector3 spawnPosition = _gameController.GetPlayerPosition() +  new Vector3(Random.Range(0f, 10f), Random.Range(0f, 15f));
+            string enemyType = "BaseEnemy";
+            GameObject enemyObject = wolf1;
+            float randomNum = Random.Range(0, 1f);
+            if (0.25 <= randomNum) // If we want a different enemy other than the base one
+            {
+                enemyObject = wolf2;
+                enemyType = "FastEnemy";
+            }
+            else if (0.1 <= randomNum)
+            {
+                enemyObject = wolf3;
+                enemyType = "BigEnemy";
+            }
+            
+            GameObject newEnemy = Instantiate(enemyObject, spawnPosition, Quaternion.identity, this.transform);
+            newEnemy.SetActive(true);
             EnemyController newEnemyController = newEnemy.GetComponent<EnemyController>();
-            float randomNum = _rng.NextFloat(0f, 1f);
-            if (0.5 <= randomNum)
-            {
-                Debug.Log("base spawned");
-                newEnemyController.SetEnemyType("BaseEnemy");
-            }
-            else if (0.5 >= randomNum)
-            {
-                Debug.Log("fast spawned");
-                newEnemyController.SetEnemyType("FastEnemy");
-            }
-            // else
-            // {
-            //     
-            // }
+            newEnemyController.SetEnemyType(enemyType);
             _enemies.Add(newEnemy);
             _timeFromLastEnemySpawn = 0;
 

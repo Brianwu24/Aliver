@@ -64,7 +64,9 @@ public class Player : MonoBehaviour
         //     
         // }
         // Debug.Log(directionVector);
+        
         GameObject newBullet = Instantiate(bulletObject, _transform.position, Quaternion.identity, _transform);
+        
         // newBullet.GetComponent<Bullet>().SetDirectionSpeed(directionVector * _gameController.GetBulletSpeed());
     }
     

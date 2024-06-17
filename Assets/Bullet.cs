@@ -2,15 +2,11 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-    // Start is called before the first frame update
-    public GameObject gameController;
-    private GameController _gameController;
-
     public GameObject enemyManager;
     private EnemyManager _enemyManager;
 
     private string _type;
-    private float _damage;
+    private float _baseDamage;
     private Vector3 _directionSpeedVector;
     private Rigidbody2D _rb;
 
@@ -18,18 +14,17 @@ public class Bullet : MonoBehaviour
     void Start()
     {
         _isAlive = true;
-        _gameController = gameController.GetComponent<GameController>();
         _enemyManager = enemyManager.GetComponent<EnemyManager>();
 
         _type = gameObject.name;
-        _damage = 1;
+        _baseDamage = 1;
         if (_type == "AdvancedBullet")
         {
-            _damage = 5;
+            _baseDamage = 5;
         }
         else if (_type == "ExpertBullet")
         {
-            _damage = 10;
+            _baseDamage = 10;
         }
 
         _rb = GetComponent<Rigidbody2D>();
@@ -61,7 +56,7 @@ public class Bullet : MonoBehaviour
 
     public float GetDamage()
     {
-        return _damage;
+        return _baseDamage * Player.instance.GetDamageMul();
     }
 
     public bool GetAlive()

@@ -22,9 +22,7 @@ public class GameController : MonoBehaviour
     
     public GameObject mapController;
     private MapController _mapController;
-
-    public GameObject enemyManager;
-    private EnemyManager _enemyManager;
+    
 
     public int score;
     // Start is called before the first frame update
@@ -33,12 +31,9 @@ public class GameController : MonoBehaviour
     {
         instance = this;
         
-      
-
         _player = player.GetComponent<Player>();
         _mapController = mapController.GetComponent<MapController>();
-        _enemyManager = enemyManager.GetComponent<EnemyManager>();
-
+        
         if (File.Exists("Assets/Save/State.txt"))
         {
             // Deal with player data
@@ -75,7 +70,7 @@ public class GameController : MonoBehaviour
                 string enemyType = enemyData[2];
                 float enemyHealth = float.Parse(enemyData[3], CultureInfo.InvariantCulture.NumberFormat);
                 
-                _enemyManager.CreateEnemy(enemyPosition, enemyType, enemyHealth);
+                EnemyManager.instance.CreateEnemy(enemyPosition, enemyType, enemyHealth);
             }
             
             // Load the bullets
@@ -147,7 +142,7 @@ public class GameController : MonoBehaviour
         // Write enemy data
         // enemy amount
         // x, y, type, health
-        List<GameObject> enemies = _enemyManager.GetEnemies();
+        List<GameObject> enemies = EnemyManager.instance.GetEnemies();
         sw.WriteLine($"{enemies.Count}");
         foreach (GameObject enemy in enemies)
         {

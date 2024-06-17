@@ -5,18 +5,14 @@ using UnityEngine.PlayerLoop;
 
 public class BaseEnemy
 {
-    private GameController _gameController;
-    
     private float _health;
     private float _damage;
     private float _speed;
 
     public BaseEnemy(
-        GameController gameController, 
         float health,
         float damage)
     {
-        _gameController = gameController;
         _health = health;
         _damage = damage;
     }
@@ -61,7 +57,7 @@ public class BaseEnemy
 public class FastEnemy : BaseEnemy
 {
     private float _enragedSpeedMul;
-    public FastEnemy(GameController gameController,  float health, float damage, float enragedSpeedMul) : base(gameController,  health, damage)
+    public FastEnemy( float health, float damage, float enragedSpeedMul) : base(health, damage)
     {
         _enragedSpeedMul = enragedSpeedMul;
 
@@ -82,7 +78,7 @@ public class FastEnemy : BaseEnemy
 public class BigEnemy : BaseEnemy
 {
     private float _enragedSpeedMul;
-    public BigEnemy(GameController gameController, float health, float damage, float enragedSpeedMul) : base(gameController,  health, damage)
+    public BigEnemy(float health, float damage, float enragedSpeedMul) : base(health, damage)
     {
         _enragedSpeedMul = enragedSpeedMul;
     }
@@ -117,7 +113,6 @@ public class EnemyController: MonoBehaviour
     void Start()
     {
         gameObject.SetActive(true);
-        _gameController = gameController.GetComponent<GameController>();
         _rb = GetComponent<Rigidbody2D>();
         
         
@@ -130,17 +125,17 @@ public class EnemyController: MonoBehaviour
         if (type == "BaseEnemy")
         {
             _speed = 1f;
-            _enemy = new BaseEnemy(_gameController, 2f, 1f);
+            _enemy = new BaseEnemy(2f, 1f);
         }
         else if (type == "FastEnemy")
         {
             _speed = 3f;
-            _enemy = new FastEnemy(_gameController, 1f, 0.5f, 2f);
+            _enemy = new FastEnemy(1f, 0.5f, 2f);
         }
         else if (type == "BigEnemy")
         {
             _speed = 0.5f;
-            _enemy = new BigEnemy(_gameController, 20f, 2f, 1.5f);
+            _enemy = new BigEnemy(20f, 2f, 1.5f);
         }
             
     }

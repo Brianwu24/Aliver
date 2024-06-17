@@ -7,11 +7,9 @@ using UnityEngine;
 // public class  
 public class EnemyManager : MonoBehaviour
 {
+    public static EnemyManager instance;
     public float enemySpawnTime=4;
-    // Start is called before the first frame update
-    public GameObject gameController;
-    private GameController _gameController;
-    
+
     public GameObject wolf1;
     public GameObject wolf2;
     public GameObject wolf3;
@@ -24,9 +22,8 @@ public class EnemyManager : MonoBehaviour
     
     void Start()
     {
-        _gameController = gameController.GetComponent<GameController>();
+        instance = this;
         _transform = GetComponent<Transform>();
-
         _enemies = new List<GameObject>();
     }
 
@@ -128,7 +125,7 @@ public class EnemyManager : MonoBehaviour
         if (_timeFromLastEnemySpawn >= enemySpawnTime)
         {
 
-            Vector3 spawnPosition = _gameController.GetPlayerPosition() +  new Vector3(Random.Range(-10f, 10f), Random.Range(-10f, 15f));
+            Vector3 spawnPosition = GameController.instance.GetPlayerPosition() +  new Vector3(Random.Range(-10f, 10f), Random.Range(-10f, 15f));
             string enemyType = "BaseEnemy";
             GameObject enemyObject = wolf1;
             float randomNum = Random.Range(0, 1f);
@@ -137,7 +134,7 @@ public class EnemyManager : MonoBehaviour
                 enemyObject = wolf2;
                 enemyType = "FastEnemy";
             }
-            else if (0.1 <= randomNum)
+            else if (0.25 <= randomNum && randomNum <= 0.3)
             {
                 enemyObject = wolf3;
                 enemyType = "BigEnemy";

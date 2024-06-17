@@ -5,9 +5,8 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public GameObject gameController;
-    private GameController _gameController;
-
+    public static Player instance;
+    
     public GameObject enemyManager;
     private EnemyManager _enemyManager;
 
@@ -20,21 +19,25 @@ public class Player : MonoBehaviour
     private Rigidbody2D _rb;
     private Vector2 _moveDir;
     private Transform _transform;
-    public float speed = 6f;
-
+    
     private List<GameObject> _shotBullets;
 
     private float _health;
     private bool _isAlive;
+    private float _damageMul;
+    public float speed = 6f;
 
     // Start is called before the first frame update
     void Start()
     {
+        instance = this;
+        
+        _health = 20f;
         _isAlive = true;
-        _gameController = gameController.GetComponent<GameController>();
+        _damageMul = 1f;
         _rb = GetComponent<Rigidbody2D>();
 
-        string playerBulletType = _gameController.GetBulletType();
+        string playerBulletType = GameController.instance.GetBulletType();
         if (playerBulletType == "Basic")
         {
             _bullet = basicBulletObject.GetComponent<Bullet>();
@@ -52,8 +55,7 @@ public class Player : MonoBehaviour
         
         _enemyManager = enemyManager.GetComponent<EnemyManager>();
         _transform = GetComponent<Transform>();
-
-        _health = 20f;
+        
     }
 
     public Vector3 GetPosition()
@@ -83,6 +85,16 @@ public class Player : MonoBehaviour
             _isAlive = false;
         }
     }
+
+    public float GetDamageMul()
+    {
+        return _damageMul;
+    }
+
+    public void SetDamageMul(float newDamageMul)
+    {
+        _damageMul = newDamageMul;
+    }
     
     void InputManagement()
     {
@@ -99,7 +111,7 @@ public class Player : MonoBehaviour
 
     private void Move()
     {
-        _rb.velocity = new Vector2(_moveDir.x * _gameController.GetPlayerSpeed(), _moveDir.y * _gameController.GetPlayerSpeed());
+        _rb.velocity = new Vector2(_moveDir.x * GameController.instance.GetPlayerSpeed(), _moveDir.y * GameController.instance.GetPlayerSpeed());
     }
     
 
@@ -111,7 +123,7 @@ public class Player : MonoBehaviour
     private void Shoot()
     {
         GameObject newBullet = Instantiate(basicBulletObject, _transform.position, Quaternion.identity, _transform);
-        newBullet.GetComponent<Bullet>().SetDirectionSpeedVector((_enemyManager.GetPriorityEnemyPosition() -_gameController.GetPlayerPosition()).normalized * _gameController.GetBulletSpeed());
+        newBullet.GetComponent<Bullet>().SetDirectionSpeedVector((_enemyManager.GetPriorityEnemyPosition() - GameController.instance.GetPlayerPosition()).normalized * GameController.instance.GetBulletSpeed());
         newBullet.SetActive(true);
         _shotBullets.Add(newBullet);
     }
@@ -168,6 +180,10 @@ public class Player : MonoBehaviour
                 // Close the game or put the death screen
                 // Todo someone please take care of this!!
             }
+        }
+        else if (other.gameObject.CompareTag("PlayerPowerUp"))
+        {
+            other.gameObject.GetComponent<PlayerSpeedUp>();
         }
     }
 

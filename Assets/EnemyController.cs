@@ -97,9 +97,6 @@ public class BigEnemy : BaseEnemy
 public class EnemyController: MonoBehaviour
 { 
     // Start is called before the first frame update
-    public GameObject gameController;
-    private GameController _gameController;
-
     private Vector3  _speedDirectionVector;
     
     private Rigidbody2D _rb;
@@ -158,14 +155,14 @@ public class EnemyController: MonoBehaviour
     public void Move()
     {
         // Get the unit vector then mul by speed and game controller speed to determine enemy speed
-        _speedDirectionVector =  (_gameController.GetPlayerPosition() - _transform.position).normalized * (_speed * _gameController.GetEnemySpeed());
+        _speedDirectionVector =  (GameController.instance.GetPlayerPosition() - _transform.position).normalized * (_speed * GameController.instance.GetEnemySpeed());
 
         this._rb.velocity = _speedDirectionVector;
     }
 
     public float GetDistanceFromPlayer()
     {
-        return (_gameController.GetPlayerPosition() - this._transform.position).magnitude;
+        return (GameController.instance.GetPlayerPosition() - this._transform.position).magnitude;
     }
 
     public float GetPriority()

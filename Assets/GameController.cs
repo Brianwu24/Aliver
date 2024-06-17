@@ -12,28 +12,18 @@ public class GameController : MonoBehaviour
     public float playerShootSpeed;
     public float bulletSpeed;
     
-    public GameObject player;
-    private Player _player;
 
     public float enemySpeed;
 
     public string bulletType;
     
     
-    public GameObject mapController;
-    private MapController _mapController;
-    
-
     public int score;
     // Start is called before the first frame update
 
     void Start()
     {
-        instance = this;
-        
-        _player = player.GetComponent<Player>();
-        _mapController = mapController.GetComponent<MapController>();
-        
+        bulletType = "BasicBullet";
         if (File.Exists("Assets/Save/State.txt"))
         {
             // Deal with player data
@@ -47,11 +37,11 @@ public class GameController : MonoBehaviour
                 float.Parse(playerData[1], CultureInfo.InvariantCulture.NumberFormat));
             
             // Set the player position
-            _player.SetPosition(loadedPlayerPosition);
+            Player.instance.SetPosition(loadedPlayerPosition);
             
             //Get the player's saved health
             float loadedHealth = float.Parse(playerData[2], CultureInfo.InvariantCulture.NumberFormat);
-            _player.SetHealth(loadedHealth);
+            Player.instance.SetHealth(loadedHealth);
 
             //Set bullet type
             bulletType = playerData[3];
@@ -85,12 +75,12 @@ public class GameController : MonoBehaviour
                     float.Parse(bulletData[2], CultureInfo.InvariantCulture.NumberFormat),
                     float.Parse(bulletData[3], CultureInfo.InvariantCulture.NumberFormat));
                 string bulletType = bulletData[4];
-                _player.LoadBullet(bulletPosition, bulletDirectionSpeedVector, bulletType);
+                Player.instance.LoadBullet(bulletPosition, bulletDirectionSpeedVector, bulletType);
                 
             }
             sr.Close();
-        
         }
+        instance = this;
     }
 
     public float GetPlayerSpeed()
@@ -120,7 +110,7 @@ public class GameController : MonoBehaviour
 
     public Vector3 GetPlayerPosition()
     {
-        return _player.GetPosition();
+        return Player.instance.GetPosition();
     }
     
 
@@ -136,8 +126,8 @@ public class GameController : MonoBehaviour
         
         //Write player data
         StreamWriter sw = new StreamWriter("Assets/Save/State.txt");
-        Vector3 playerPosition = _player.GetPosition();
-        sw.WriteLine($"{playerPosition.x},{playerPosition.y},{_player.GetHealth()},{bulletType}");
+        Vector3 playerPosition = Player.instance.GetPosition();
+        sw.WriteLine($"{playerPosition.x},{playerPosition.y},{Player.instance.GetHealth()},{bulletType}");
 
         // Write enemy data
         // enemy amount
@@ -155,9 +145,9 @@ public class GameController : MonoBehaviour
         }
         
         // Make sure that all the bullets are alive
-        _player.PruneBullets();
+        Player.instance.PruneBullets();
         // write the bullet data
-        List<GameObject> shotBullets = _player.GetBullets();
+        List<GameObject> shotBullets = Player.instance.GetBullets();
         //Write the amount of bullets in the game that has to be saved
         sw.WriteLine($"{shotBullets.Count}");
         // x, y, direction x, direction y, type

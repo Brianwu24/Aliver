@@ -22,9 +22,9 @@ public class EnemyManager : MonoBehaviour
     
     void Start()
     {
-        instance = this;
         _transform = GetComponent<Transform>();
         _enemies = new List<GameObject>();
+        instance = this;
     }
 
     public void CreateEnemy(Vector3 spawnPosition, string enemyType, float enemyHealth)

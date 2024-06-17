@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using MathF = System.MathF;
+
 using Random = Unity.Mathematics.Random;
 
 public class PerlinNoise
@@ -60,9 +60,12 @@ public class PerlinNoise
 }
 public class MapController : MonoBehaviour
 {
+    public static MapController instance;
     public GameObject gameController;
     private GameController _gameController;
+    
     private Player _player;
+    
     private Random _rng;
 
     public GameObject treeObjects;
@@ -121,8 +124,9 @@ public class MapController : MonoBehaviour
     void Start()
     {
         _rng = new Random((uint)UnityEngine.Random.Range(1, 100000));
-        _gameController = gameController.GetComponent<GameController>();
-        _player = _gameController.GetComponent<Player>();
+        
+        // _gameController = gameController.GetComponent<GameController>();
+        _player = Player.instance;
 
 
         _treeObjects = new List<GameObject>();
@@ -141,7 +145,7 @@ public class MapController : MonoBehaviour
         _mapNoise = new PerlinNoise(20, 12, scale).GetPerlinNoise();
         CreateTrees(_treeObjects, _mapNoise, scale);
         CreateRocks(_rockObjects, _mapNoise, scale);
-
+        instance = this;
     }
 
     // Update is called once per frame

@@ -3,26 +3,27 @@ using System.IO;
 using System.Collections.Generic;
 using System.Globalization;
 using UnityEngine;
+using Random = UnityEngine.Random;
+
 
 public class GameController : MonoBehaviour
 {
     public static GameController instance;
     
     public float playerSpeed;
-    public float playerShootSpeed;
     public float bulletSpeed;
+    private int _score;
+    private string _nextPowerUp;
     
-
     public float enemySpeed;
 
     public string bulletType;
-    
-    
-    private int _score;
     // Start is called before the first frame update
 
     void Start()
     {
+        this.GenerateRandomPowerUp(); // Create the next random power up in case Player PowerUp decides to use it
+        
         bulletType = "BasicBullet";
         if (File.Exists("Assets/Save/State.txt"))
         {
@@ -88,11 +89,11 @@ public class GameController : MonoBehaviour
         return playerSpeed;
     }
 
-    public float GetPlayerShootSpeed()
+    public void SetPlayerSpeed(float newSpeed)
     {
-        return playerShootSpeed;
+        playerSpeed = newSpeed;
     }
-
+    
     public float GetBulletSpeed()
     {
         return bulletSpeed;
@@ -121,6 +122,19 @@ public class GameController : MonoBehaviour
     public int GetScore()
     {
         return _score;
+    }
+
+    public void GenerateRandomPowerUp()
+    {
+        int randomNum = Random.Range(0, 3);
+        if (randomNum == 0) _nextPowerUp = "SpeedInc";
+        if (randomNum == 1) _nextPowerUp = "HealthInc";
+        if (randomNum == 2) _nextPowerUp = "DamageMulInc"; 
+    }
+
+    public string GetNextPowerUp()
+    {
+        return _nextPowerUp;
     }
     
 

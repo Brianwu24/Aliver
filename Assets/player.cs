@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Unity.Mathematics;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -9,9 +8,6 @@ public class Player : MonoBehaviour
 
     public GameObject gameController;
     private GameController _gameController;
-    
-    // public GameObject enemyManager;
-    // private EnemyManager _enemyManager;
 
     public GameObject basicBulletObject;
     public GameObject advancedBulletObject;
@@ -28,7 +24,6 @@ public class Player : MonoBehaviour
     private float _health;
     private bool _isAlive;
     private float _damageMul;
-    public float speed = 6f;
 
     // Start is called before the first frame update
     void Start()
@@ -56,7 +51,6 @@ public class Player : MonoBehaviour
 
         _shotBullets = new List<GameObject>();
         
-        // _enemyManager = enemyManager.GetComponent<EnemyManager>();
         _transform = GetComponent<Transform>();
         instance = this;
     }
@@ -175,7 +169,6 @@ public class Player : MonoBehaviour
         if (other.gameObject.CompareTag("Enemy"))
         {
             _health -= other.gameObject.GetComponent<EnemyController>().GetDamage();
-            Debug.Log(_health);
             if (_health <= 0)
             {
                 _isAlive = false;
@@ -184,11 +177,20 @@ public class Player : MonoBehaviour
                 // Todo someone please take care of this!!
             }
         }
-        else if (other.gameObject.CompareTag("PlayerPowerUp"))
+    }
+
+    public void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject.CompareTag("PlayerPowerUp"))
         {
-            // PlayerPowerUp thing = other.gameObject.GetComponent<PlayerPowerUp>();
+            PlayerPowerUp powerUp = other.gameObject.GetComponent<PlayerPowerUp>();
+            string powerUpType = powerUp.GetPowerUpType();
+
+            if (powerUpType == "SpeedInc") GameController.instance.SetPlayerSpeed(GameController.instance.GetPlayerSpeed() * powerUp.GetAmount());
+            else if (powerUpType == "HealthInc") _health += powerUp.GetAmount();
+            else _damageMul *= powerUp.GetAmount();
             
-        }
+        } 
     }
 
     void Update()

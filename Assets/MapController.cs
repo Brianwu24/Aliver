@@ -2,8 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-
-using Random = Unity.Mathematics.Random;
+using Random = UnityEngine.Random;
 
 public class PerlinNoise
 {
@@ -66,8 +65,6 @@ public class MapController : MonoBehaviour
     
     private Player _player;
     
-    private Random _rng;
-
     public GameObject treeObjects;
     private List<GameObject> _treeObjects;
     
@@ -85,10 +82,10 @@ public class MapController : MonoBehaviour
             for (int x = 0; x < noise[y].Length; x++)
             {
                 float probability = noise[y][x];
-                if (probability + 0.04>= _rng.NextFloat(0f, 1f))
+                if (probability + 0.04>= Random.Range(0f, 1f))
                 {
                     // Choose a random tree
-                    treeList.Add(Instantiate(trees[_rng.NextInt(0, trees.Count)], new Vector3(x * scale - 10 + _rng.NextFloat(-1, 1), y * scale - 6 + _rng.NextFloat(-1, 1), 1), Quaternion.identity,
+                    treeList.Add(Instantiate(trees[Random.Range(0, trees.Count)], new Vector3(x * scale - 10 + Random.Range(-1f, 1f), y * scale - 6 + Random.Range(-1f, 1f), 1), Quaternion.identity,
                         this.transform));
 
                     noise[y][x] = 0;
@@ -106,10 +103,10 @@ public class MapController : MonoBehaviour
             int x = 0;
             foreach (float probability in noise[y])
             {
-                if (probability + 0.035>= _rng.NextFloat(0f, 1f))
+                if (probability + 0.035>= Random.Range(0f, 1f))
                 {
                     // choose a random rock
-                    rockList.Add(Instantiate(rocks[_rng.NextInt(0, rocks.Count)], new Vector3(x * scale - 10 + _rng.NextFloat(-1, 1), y * scale - 6 + _rng.NextFloat(-1, 1), 1), Quaternion.identity,
+                    rockList.Add(Instantiate(rocks[Random.Range(0, rocks.Count)], new Vector3(x * scale - 10 + Random.Range(-1f, 1f), y * scale - 6 + UnityEngine.Random.Range(-1f, 1f), 1), Quaternion.identity,
                         this.transform));
                 }
                 x++;
@@ -123,8 +120,6 @@ public class MapController : MonoBehaviour
     // private void 
     void Start()
     {
-        _rng = new Random((uint)UnityEngine.Random.Range(1, 100000));
-        
         // _gameController = gameController.GetComponent<GameController>();
         _player = Player.instance;
 

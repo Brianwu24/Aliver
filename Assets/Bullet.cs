@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Bullet : MonoBehaviour
@@ -15,14 +12,25 @@ public class Bullet : MonoBehaviour
     private float _damage;
     private Vector3 _directionSpeedVector;
     private Rigidbody2D _rb;
+
+    private bool _isAlive;
     void Start()
     {
+        _isAlive = true;
         _gameController = gameController.GetComponent<GameController>();
         _enemyManager = enemyManager.GetComponent<EnemyManager>();
 
         string bulletType = gameObject.name;
-        
         _damage = 1;
+        if (bulletType == "AdvancedBullet")
+        {
+            _damage = 5;
+        }
+        else if (bulletType == "ExpertBullet")
+        {
+            _damage = 10;
+        }
+        
         _directionSpeedVector = new Vector3();
         _rb = GetComponent<Rigidbody2D>();
 
@@ -33,7 +41,7 @@ public class Bullet : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Enemy"))
         {
-            Destroy(gameObject);
+            _isAlive = false;
         }
     }
 
@@ -41,9 +49,18 @@ public class Bullet : MonoBehaviour
     {
         return _damage;
     }
+
+    public bool GetAlive()
+    {
+        return _isAlive;
+    }
     // Update is called once per frame
     void FixedUpdate()
     {
         _rb.velocity = _directionSpeedVector;
+        if (transform.position.magnitude >= 30)
+        {
+            _isAlive = false;
+        }
     }
 }

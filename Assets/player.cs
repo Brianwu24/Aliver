@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -21,11 +22,15 @@ public class Player : MonoBehaviour
     private Transform _transform;
     public float speed = 6f;
 
+    private List<GameObject> _shotBullets;
+
     private float _health;
+    private bool _isAlive;
 
     // Start is called before the first frame update
     void Start()
     {
+        _isAlive = true;
         _gameController = gameController.GetComponent<GameController>();
         _rb = GetComponent<Rigidbody2D>();
 
@@ -42,6 +47,8 @@ public class Player : MonoBehaviour
         {
             _bullet = expertBulletObject.GetComponent<Bullet>();
         }
+
+        _shotBullets = new List<GameObject>();
         
         _enemyManager = enemyManager.GetComponent<EnemyManager>();
         _transform = GetComponent<Transform>();
@@ -72,8 +79,8 @@ public class Player : MonoBehaviour
         }
         else
         {
-            Destroy(gameObject);
-            // This will cause the object to be destroyed
+            // Just in case something goes wrong with the code
+            _isAlive = false;
         }
     }
     
@@ -106,6 +113,21 @@ public class Player : MonoBehaviour
     {
         GameObject newBullet = Instantiate(basicBulletObject, _transform.position, Quaternion.identity, _transform);
         newBullet.SetActive(true);
+        _shotBullets.Add(newBullet);
+    }
+
+    private void PruneBullets()
+    {
+        // Linear search for destroying bullets
+        for (int bulletIndex = 0; bulletIndex < _shotBullets.Count; bulletIndex++)
+        {
+            GameObject bullet = _shotBullets[bulletIndex];
+            if (!bullet.GetComponent<Bullet>().GetAlive())
+            {
+                _shotBullets.RemoveAt(bulletIndex);
+                Destroy(bullet);
+            }
+        }
     }
 
     public void OnCollisionEnter2D(Collision2D other)
@@ -116,7 +138,10 @@ public class Player : MonoBehaviour
             Debug.Log(_health);
             if (_health <= 0)
             {
-                Destroy(gameObject);
+                _isAlive = false;
+                Debug.Log("Player is dead someone make a death screen or pause screen to handle this");
+                // Close the game or put the death screen
+                // Todo someone please take care of this!!
             }
         }
     }
@@ -124,6 +149,7 @@ public class Player : MonoBehaviour
     void Update()
     {
         InputManagement();
+        PruneBullets();
     }
     
 }

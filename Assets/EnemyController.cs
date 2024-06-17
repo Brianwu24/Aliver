@@ -1,4 +1,5 @@
 using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.PlayerLoop;
 
@@ -121,7 +122,6 @@ public class EnemyController: MonoBehaviour
         
         
         _transform = GetComponent<Transform>();
-        _enemyType = "BaseEnemy";
     }
     
     public void SetEnemyType(string type)
@@ -189,7 +189,14 @@ public class EnemyController: MonoBehaviour
 
     public string GetEnemyType()
     {
-        return _enemyType;
+        if (_enemyType != null)
+        {
+            return _enemyType;
+        }
+        else
+        {
+            return "BaseEnemy";
+        }
     }
 
     // Update is called once per frame

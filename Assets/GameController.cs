@@ -154,6 +154,7 @@ public class GameController : MonoBehaviour
             EnemyController targetEnemyController = enemy.GetComponent<EnemyController>();
             Vector3 enemyLocation = enemy.transform.position;
             string enemyType = targetEnemyController.GetEnemyType();
+            
             float enemyHealth = targetEnemyController.GetHealth();
             sw.WriteLine($"{enemyLocation.x},{enemyLocation.y},{enemyType},{enemyHealth}");
         }

@@ -66,6 +66,7 @@ public class EnemyManager : MonoBehaviour
                     GameObject enemy = _enemies[i]; 
                     _enemies.RemoveAt(i);
                     Destroy(enemy);
+                    GameController.instance.score += 1;
                 }
             }
         }

@@ -6,6 +6,8 @@ using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
+    public static GameController instance;
+    
     public float playerSpeed;
     public float playerShootSpeed;
     public float bulletSpeed;
@@ -23,10 +25,16 @@ public class GameController : MonoBehaviour
 
     public GameObject enemyManager;
     private EnemyManager _enemyManager;
+
+    public int score;
     // Start is called before the first frame update
 
     void Start()
     {
+        instance = this;
+        
+      
+
         _player = player.GetComponent<Player>();
         _mapController = mapController.GetComponent<MapController>();
         _enemyManager = enemyManager.GetComponent<EnemyManager>();

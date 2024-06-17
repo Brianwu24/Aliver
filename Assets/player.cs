@@ -10,8 +10,8 @@ public class Player : MonoBehaviour
     public GameObject gameController;
     private GameController _gameController;
     
-    public GameObject enemyManager;
-    private EnemyManager _enemyManager;
+    // public GameObject enemyManager;
+    // private EnemyManager _enemyManager;
 
     public GameObject basicBulletObject;
     public GameObject advancedBulletObject;
@@ -56,7 +56,7 @@ public class Player : MonoBehaviour
 
         _shotBullets = new List<GameObject>();
         
-        _enemyManager = enemyManager.GetComponent<EnemyManager>();
+        // _enemyManager = enemyManager.GetComponent<EnemyManager>();
         _transform = GetComponent<Transform>();
         instance = this;
     }
@@ -126,7 +126,7 @@ public class Player : MonoBehaviour
     private void Shoot()
     {
         GameObject newBullet = Instantiate(basicBulletObject, _transform.position, Quaternion.identity, _transform);
-        newBullet.GetComponent<Bullet>().SetDirectionSpeedVector((_enemyManager.GetPriorityEnemyPosition() - GameController.instance.GetPlayerPosition()).normalized * GameController.instance.GetBulletSpeed());
+        newBullet.GetComponent<Bullet>().SetDirectionSpeedVector((EnemyManager.instance.GetPriorityEnemyPosition() - GameController.instance.GetPlayerPosition()).normalized * GameController.instance.GetBulletSpeed());
         newBullet.SetActive(true);
         _shotBullets.Add(newBullet);
     }

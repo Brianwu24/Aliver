@@ -8,7 +8,7 @@ using UnityEngine;
 public class EnemyManager : MonoBehaviour
 {
     public static EnemyManager instance;
-    public float enemySpawnTime=4;
+    public float enemySpawnTime=0.5f;
 
     public GameObject wolf1;
     public GameObject wolf2;
@@ -58,12 +58,26 @@ public class EnemyManager : MonoBehaviour
         {
             for (int i = 0; i < _enemies.Count; i++)
             {
-                if (_enemies[i].GetComponent<EnemyController>().GetHealth() <= 0)
+                EnemyController enemyController = _enemies[i].GetComponent<EnemyController>();
+                if (enemyController.GetHealth() <= 0)
                 {
                     GameObject enemy = _enemies[i]; 
                     _enemies.RemoveAt(i);
                     Destroy(enemy);
-                    GameController.instance.score += 1;
+
+                    string enemyType = enemyController.GetEnemyType();
+                    if (enemyType == "BasicEnemy")
+                    {
+                        GameController.instance.IncScore(1);
+                    }
+                    else if (enemyType == "FastEnemy")
+                    {
+                        GameController.instance.IncScore(1);
+                    }
+                    else if (enemyType == "BigEnemy")
+                    {
+                        GameController.instance.IncScore(3);
+                    }
                 }
             }
         }
@@ -129,12 +143,12 @@ public class EnemyManager : MonoBehaviour
             string enemyType = "BaseEnemy";
             GameObject enemyObject = wolf1;
             float randomNum = Random.Range(0, 1f);
-            if (0.25 <= randomNum) // If we want a different enemy other than the base one
+            if (0.3 >= randomNum) // If we want a different enemy other than the base one
             {
                 enemyObject = wolf2;
                 enemyType = "FastEnemy";
             }
-            else if (0.25 <= randomNum && randomNum <= 0.3)
+            else if (0.3 <= randomNum && randomNum <= 0.5)
             {
                 enemyObject = wolf3;
                 enemyType = "BigEnemy";

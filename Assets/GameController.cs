@@ -18,7 +18,7 @@ public class GameController : MonoBehaviour
     public string bulletType;
     
     
-    public int score;
+    private int _score;
     // Start is called before the first frame update
 
     void Start()
@@ -111,6 +111,16 @@ public class GameController : MonoBehaviour
     public Vector3 GetPlayerPosition()
     {
         return Player.instance.GetPosition();
+    }
+
+    public void IncScore(int point)
+    {
+        _score += point;
+    }
+
+    public int GetScore()
+    {
+        return _score;
     }
     
 

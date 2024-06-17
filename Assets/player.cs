@@ -6,6 +6,9 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     public static Player instance;
+
+    public GameObject gameController;
+    private GameController _gameController;
     
     public GameObject enemyManager;
     private EnemyManager _enemyManager;
@@ -30,14 +33,14 @@ public class Player : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        instance = this;
-        
         _health = 20f;
         _isAlive = true;
         _damageMul = 1f;
         _rb = GetComponent<Rigidbody2D>();
 
-        string playerBulletType = GameController.instance.GetBulletType();
+        _gameController = gameController.GetComponent<GameController>();
+        string playerBulletType = _gameController.GetBulletType();
+        
         if (playerBulletType == "Basic")
         {
             _bullet = basicBulletObject.GetComponent<Bullet>();
@@ -55,7 +58,7 @@ public class Player : MonoBehaviour
         
         _enemyManager = enemyManager.GetComponent<EnemyManager>();
         _transform = GetComponent<Transform>();
-        
+        instance = this;
     }
 
     public Vector3 GetPosition()
@@ -183,7 +186,8 @@ public class Player : MonoBehaviour
         }
         else if (other.gameObject.CompareTag("PlayerPowerUp"))
         {
-            other.gameObject.GetComponent<PlayerSpeedUp>();
+            // PlayerPowerUp thing = other.gameObject.GetComponent<PlayerPowerUp>();
+            
         }
     }
 

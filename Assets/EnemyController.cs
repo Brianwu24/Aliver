@@ -1,15 +1,9 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using JetBrains.Annotations;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
-using UnityEngine.UIElements;
 
 public class BaseEnemy
 {
     private GameController _gameController;
-    private Transform _transform;
     
     private float _health;
     private float _damage;
@@ -17,12 +11,10 @@ public class BaseEnemy
 
     public BaseEnemy(
         GameController gameController, 
-        Transform transform,
         float health,
         float damage)
     {
         _gameController = gameController;
-        _transform = transform;
         _health = health;
         _damage = damage;
     }
@@ -30,6 +22,11 @@ public class BaseEnemy
     public float GetHealth()
     {
         return this._health;
+    }
+
+    public void SetHealth(float newHealth)
+    {
+        _health = newHealth;
     }
 
     public float GetDamage()
@@ -46,17 +43,21 @@ public class BaseEnemy
     {
         _health -= damage;
     }
-
-    public float GetDistanceFromPlayer()
-    {
-        return (_gameController.GetPlayerPosition() - _transform.position).magnitude;
-    }
     
 }
 
 public class FastEnemy : BaseEnemy
 {
-    public FastEnemy(GameController gameController, Transform transfrom, float health, float damage) : base(gameController, transfrom, health, damage)
+    public FastEnemy(GameController gameController,  float health, float damage) : base(gameController,  health, damage)
+    {
+        
+
+    }
+}
+
+public class BigEnemy : BaseEnemy
+{
+    public BigEnemy(GameController gameController, float health, float damage) : base(gameController,  health, damage)
     {
         
 
@@ -72,29 +73,54 @@ public class EnemyController: MonoBehaviour
     private Transform _transform;
     private float _speed;
     private BaseEnemy _enemy;
+
+    private string _enemyType;
     
     
     void Start()
     {
+        gameObject.SetActive(true);
         _gameController = gameController.GetComponent<GameController>();
         _rb = GetComponent<Rigidbody2D>();
+        // Debug.Log("2");
         _transform = GetComponent<Transform>();
+        _enemyType = "BaseEnemy";
     }
     
     public void SetEnemyType(string type)
     {
+        _enemyType = type;
         if (type == "BaseEnemy")
         {
             _speed = 1f;
-            _enemy = new BaseEnemy(_gameController, _transform, 1f, 1f);
-            Debug.Log(_enemy.GetHealth());
+            _enemy = new BaseEnemy(_gameController, 2f, 1f);
         }
         else if (type == "FastEnemy")
         {
-            _speed = 1.3f;
-            _enemy = new FastEnemy(_gameController,  _transform, 1f, 1f);
+            _speed = 3f;
+            _enemy = new FastEnemy(_gameController, 1f, 0.5f);
+        }
+        else if (type == "BigEnemy")
+        {
+            _speed = 0.5f;
+            _enemy = new BigEnemy(_gameController, 20f, 2f);
         }
             
+    }
+
+    public float GetHealth()
+    {
+        return _enemy.GetHealth();
+    }
+
+    public void SetHealth(float newHealth)
+    {
+        _enemy.SetHealth(newHealth);
+    }
+
+    public float GetDamage()
+    {
+        return _enemy.GetDamage();
     }
     
     public void Move()
@@ -103,17 +129,29 @@ public class EnemyController: MonoBehaviour
         this._rb.velocity = (_gameController.GetPlayerPosition() - _transform.position).normalized * (_speed * _gameController.GetEnemySpeed());
     }
 
+    public float GetDistanceFromPlayer()
+    {
+        Debug.Log(_gameController.GetPlayerPosition());
+        return (_gameController.GetPlayerPosition() - this._transform.position).magnitude;
+    }
+
+    public float GetPriority()
+    {
+        return (_speed * 2f) * (_enemy.GetHealth() * 0.05f) * (1/GetDistanceFromPlayer() * 100);
+    }
+
     public void OnCollisionEnter2D(Collision2D other)
     {
         if (other.gameObject.CompareTag("Bullet"))
         {
             Bullet collidedBullet = other.gameObject.GetComponent<Bullet>();
             this._enemy.TakeDamage(collidedBullet.GetDamage());
-            if (0 >= _enemy.GetHealth())
-            {
-                Destroy(gameObject);
-            }
         }
+    }
+
+    public string GetEnemyType()
+    {
+        return _enemyType;
     }
 
     // Update is called once per frame

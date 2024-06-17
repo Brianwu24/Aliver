@@ -8435,7 +8435,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerSpeed: 3
-  playerShootSpeed: 0
+  playerShootSpeed: 3
   bulletSpeed: 2
   player: {fileID: 346707566}
   enemySpeed: 1

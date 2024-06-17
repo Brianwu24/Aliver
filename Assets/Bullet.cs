@@ -8,33 +8,47 @@ public class Bullet : MonoBehaviour
 
     public GameObject enemyManager;
     private EnemyManager _enemyManager;
-    
+
+    private string _type;
     private float _damage;
     private Vector3 _directionSpeedVector;
     private Rigidbody2D _rb;
 
-    private bool _isAlive;
+    private bool _isAlive = true;
     void Start()
     {
         _isAlive = true;
         _gameController = gameController.GetComponent<GameController>();
         _enemyManager = enemyManager.GetComponent<EnemyManager>();
 
-        string bulletType = gameObject.name;
+        _type = gameObject.name;
         _damage = 1;
-        if (bulletType == "AdvancedBullet")
+        if (_type == "AdvancedBullet")
         {
             _damage = 5;
         }
-        else if (bulletType == "ExpertBullet")
+        else if (_type == "ExpertBullet")
         {
             _damage = 10;
         }
-        
-        _directionSpeedVector = new Vector3();
+
         _rb = GetComponent<Rigidbody2D>();
 
-        _directionSpeedVector = (_enemyManager.GetPriorityEnemyPosition() -_gameController.GetPlayerPosition()).normalized * _gameController.GetBulletSpeed();
+    }
+
+    public string GetBulletType()
+    {
+        return _type;
+    }
+
+    public Vector3 GetDirectionSpeedVector()
+    {
+        return _directionSpeedVector;
+    }
+
+    public void SetDirectionSpeedVector(Vector3 newDirectionSpeedVector)
+    {
+        _directionSpeedVector = newDirectionSpeedVector;
     }
 
     public void OnCollisionEnter2D(Collision2D other)
@@ -57,8 +71,12 @@ public class Bullet : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        _rb.velocity = _directionSpeedVector;
-        if (transform.position.magnitude >= 30)
+        if (_directionSpeedVector != null)
+        {
+            _rb.velocity = _directionSpeedVector;
+        }
+
+        if (transform.position.magnitude >= 20)
         {
             _isAlive = false;
         }

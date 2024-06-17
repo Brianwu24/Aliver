@@ -69,6 +69,22 @@ public class GameController : MonoBehaviour
                 
                 _enemyManager.CreateEnemy(enemyPosition, enemyType, enemyHealth);
             }
+            
+            // Load the bullets
+            int numBullets = int.Parse(sr.ReadLine(), CultureInfo.InvariantCulture.NumberFormat);
+            for (int bulletIndex = 0; bulletIndex < numBullets; bulletIndex++)
+            {
+                string[] bulletData = sr.ReadLine().Split(",");
+                Vector3 bulletPosition = new Vector3(
+                    float.Parse(bulletData[0], CultureInfo.InvariantCulture.NumberFormat),
+                    float.Parse(bulletData[1], CultureInfo.InvariantCulture.NumberFormat)); 
+                Vector3 bulletDirectionSpeedVector = new Vector3(
+                    float.Parse(bulletData[2], CultureInfo.InvariantCulture.NumberFormat),
+                    float.Parse(bulletData[3], CultureInfo.InvariantCulture.NumberFormat));
+                string bulletType = bulletData[4];
+                _player.LoadBullet(bulletPosition, bulletDirectionSpeedVector, bulletType);
+                
+            }
             sr.Close();
         
         }
@@ -101,7 +117,7 @@ public class GameController : MonoBehaviour
 
     public Vector3 GetPlayerPosition()
     {
-        return player.transform.position;
+        return _player.GetPosition();
     }
     
 
@@ -115,12 +131,14 @@ public class GameController : MonoBehaviour
         //Over write the file by deleting, no exception is thrown if the file doesn't exist
         File.Delete("Assets/Save/State.txt");
         
-        
-        
+        //Write player data
         StreamWriter sw = new StreamWriter("Assets/Save/State.txt");
         Vector3 playerPosition = _player.GetPosition();
         sw.WriteLine($"{playerPosition.x},{playerPosition.y},{_player.GetHealth()},{bulletType}");
 
+        // Write enemy data
+        // enemy amount
+        // x, y, type, health
         List<GameObject> enemies = _enemyManager.GetEnemies();
         sw.WriteLine($"{enemies.Count}");
         foreach (GameObject enemy in enemies)
@@ -130,6 +148,22 @@ public class GameController : MonoBehaviour
             string enemyType = targetEnemyController.GetEnemyType();
             float enemyHealth = targetEnemyController.GetHealth();
             sw.WriteLine($"{enemyLocation.x},{enemyLocation.y},{enemyType},{enemyHealth}");
+        }
+        
+        // Make sure that all the bullets are alive
+        _player.PruneBullets();
+        // write the bullet data
+        List<GameObject> shotBullets = _player.GetBullets();
+        //Write the amount of bullets in the game that has to be saved
+        sw.WriteLine($"{shotBullets.Count}");
+        // x, y, direction x, direction y, type
+        foreach (GameObject bulletGameObject in shotBullets)
+        {
+            Bullet bullet = bulletGameObject.GetComponent<Bullet>();
+            Vector3 bulletPosition = bullet.transform.position;
+            Vector3 bulletDirectionSpeedVector = bullet.GetDirectionSpeedVector();
+
+            sw.WriteLine($"{bulletPosition.x},{bulletPosition.y},{bulletDirectionSpeedVector.x},{bulletDirectionSpeedVector.y},{bullet.GetBulletType()}");
         }
         sw.Close();
 

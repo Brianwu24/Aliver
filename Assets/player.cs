@@ -106,17 +106,42 @@ public class Player : MonoBehaviour
     private void FixedUpdate()
     {
         Move();
-        
     }
 
     private void Shoot()
     {
         GameObject newBullet = Instantiate(basicBulletObject, _transform.position, Quaternion.identity, _transform);
+        newBullet.GetComponent<Bullet>().SetDirectionSpeedVector((_enemyManager.GetPriorityEnemyPosition() -_gameController.GetPlayerPosition()).normalized * _gameController.GetBulletSpeed());
         newBullet.SetActive(true);
         _shotBullets.Add(newBullet);
     }
 
-    private void PruneBullets()
+    public void LoadBullet(Vector3 bulletPosition, Vector3 bulletDirectionSpeedVector, string bulletType)
+    {
+        GameObject bulletGameObject = basicBulletObject;
+        if (bulletType == "AdvancedBullet(Clone)")
+        {
+            bulletGameObject = advancedBulletObject;
+        }
+        else if (bulletType == "ExpertBullet(Clone)")
+        {
+            bulletGameObject = expertBulletObject;
+        }
+
+        GameObject loadedBullet = Instantiate(bulletGameObject, bulletPosition, Quaternion.identity, _transform);
+        // Debug.Log(bulletDirectionSpeedVector);
+        loadedBullet.GetComponent<Bullet>().SetDirectionSpeedVector(bulletDirectionSpeedVector);
+        // Debug.Log(("Direction speed" , loadedBullet.GetComponent<Bullet>().GetDirectionSpeedVector()));
+        loadedBullet.SetActive(true);
+        _shotBullets.Add(loadedBullet);
+    }
+    
+    public List<GameObject> GetBullets()
+    {
+        return _shotBullets;
+    }
+
+    public void PruneBullets()
     {
         // Linear search for destroying bullets
         for (int bulletIndex = 0; bulletIndex < _shotBullets.Count; bulletIndex++)

@@ -131,6 +131,7 @@ public class EnemyController: MonoBehaviour
 
     public float GetDistanceFromPlayer()
     {
+        Debug.Log(_gameController.GetPlayerPosition());
         return (_gameController.GetPlayerPosition() - this._transform.position).magnitude;
     }
 

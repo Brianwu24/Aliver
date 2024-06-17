@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 
 public class BaseEnemy
 {
@@ -43,24 +44,57 @@ public class BaseEnemy
     {
         _health -= damage;
     }
+
+    public virtual Vector3 Update(Vector3 speedDirectionVector, float distanceFromPlayer)
+    {
+        if (distanceFromPlayer <= 5)
+        {
+            return speedDirectionVector * 1.5f;
+        }
+
+        return speedDirectionVector;
+    }
     
 }
 
 public class FastEnemy : BaseEnemy
 {
-    public FastEnemy(GameController gameController,  float health, float damage) : base(gameController,  health, damage)
+    private float _enragedSpeedMul;
+    public FastEnemy(GameController gameController,  float health, float damage, float enragedSpeedMul) : base(gameController,  health, damage)
     {
-        
+        _enragedSpeedMul = enragedSpeedMul;
 
+    }
+
+    public override Vector3 Update(Vector3 speedDirectionVector, float distanceFromPlayer)
+    {
+        // Override the base class' Update method
+        if (distanceFromPlayer <= 10)
+        {
+            return speedDirectionVector * _enragedSpeedMul;
+        }
+
+        return speedDirectionVector;
     }
 }
 
 public class BigEnemy : BaseEnemy
 {
-    public BigEnemy(GameController gameController, float health, float damage) : base(gameController,  health, damage)
+    private float _enragedSpeedMul;
+    public BigEnemy(GameController gameController, float health, float damage, float enragedSpeedMul) : base(gameController,  health, damage)
     {
-        
+        _enragedSpeedMul = enragedSpeedMul;
+    }
+    
+    public override Vector3 Update(Vector3 speedDirectionVector, float distanceFromPlayer)
+    {
+        // Override the base class' Update method
+        if (distanceFromPlayer <= 2)
+        {
+            return speedDirectionVector * _enragedSpeedMul;
+        }
 
+        return speedDirectionVector;
     }
 }
 public class EnemyController: MonoBehaviour
@@ -68,6 +102,8 @@ public class EnemyController: MonoBehaviour
     // Start is called before the first frame update
     public GameObject gameController;
     private GameController _gameController;
+
+    private Vector3  _speedDirectionVector;
     
     private Rigidbody2D _rb;
     private Transform _transform;
@@ -82,7 +118,8 @@ public class EnemyController: MonoBehaviour
         gameObject.SetActive(true);
         _gameController = gameController.GetComponent<GameController>();
         _rb = GetComponent<Rigidbody2D>();
-        // Debug.Log("2");
+        
+        
         _transform = GetComponent<Transform>();
         _enemyType = "BaseEnemy";
     }
@@ -98,12 +135,12 @@ public class EnemyController: MonoBehaviour
         else if (type == "FastEnemy")
         {
             _speed = 3f;
-            _enemy = new FastEnemy(_gameController, 1f, 0.5f);
+            _enemy = new FastEnemy(_gameController, 1f, 0.5f, 2f);
         }
         else if (type == "BigEnemy")
         {
             _speed = 0.5f;
-            _enemy = new BigEnemy(_gameController, 20f, 2f);
+            _enemy = new BigEnemy(_gameController, 20f, 2f, 1.5f);
         }
             
     }
@@ -126,12 +163,13 @@ public class EnemyController: MonoBehaviour
     public void Move()
     {
         // Get the unit vector then mul by speed and game controller speed to determine enemy speed
-        this._rb.velocity = (_gameController.GetPlayerPosition() - _transform.position).normalized * (_speed * _gameController.GetEnemySpeed());
+        _speedDirectionVector =  (_gameController.GetPlayerPosition() - _transform.position).normalized * (_speed * _gameController.GetEnemySpeed());
+
+        this._rb.velocity = _speedDirectionVector;
     }
 
     public float GetDistanceFromPlayer()
     {
-        Debug.Log(_gameController.GetPlayerPosition());
         return (_gameController.GetPlayerPosition() - this._transform.position).magnitude;
     }
 
@@ -155,8 +193,9 @@ public class EnemyController: MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         Move();
+        _enemy.Update(_speedDirectionVector, GetDistanceFromPlayer());
     }
 }

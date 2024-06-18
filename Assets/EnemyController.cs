@@ -1,6 +1,6 @@
 using System;
 using UnityEngine;
-
+// Inheritance
 public class BaseEnemy
 {
     private float _health;
@@ -53,7 +53,6 @@ public class BaseEnemy
         {
             return speedDirectionVector * 1.5f;
         }
-
         return speedDirectionVector;
     }
     
@@ -106,6 +105,8 @@ public class EnemyController: MonoBehaviour
     
     private Rigidbody2D _rb;
     private Transform _transform;
+    
+    // Composition
     private BaseEnemy _enemy;
 
     private string _enemyType;

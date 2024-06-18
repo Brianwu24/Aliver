@@ -18,10 +18,15 @@ public class GameController : MonoBehaviour
     public float enemySpeed;
 
     public string bulletType;
+
+    public GameObject leaderboardManger;
+    private LeaderboardManger _leaderboardManger;
+    
     // Start is called before the first frame update
 
     void Start()
     {
+        _leaderboardManger = leaderboardManger.GetComponent<LeaderboardManger>();
         this.GenerateRandomPowerUp(); // Create the next random power up in case Player PowerUp decides to use it
         
         bulletType = "BasicBullet";
@@ -184,7 +189,7 @@ public class GameController : MonoBehaviour
             sw.WriteLine($"{bulletPosition.x},{bulletPosition.y},{bulletDirectionSpeedVector.x},{bulletDirectionSpeedVector.y},{bullet.GetBulletType()}");
         }
         sw.Close();
-        LeaderboardManger.instance.SaveLeaderboard();
+        _leaderboardManger.SaveLeaderboard();
 
     }
 

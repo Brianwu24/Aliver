@@ -1,12 +1,10 @@
+using System;
 using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
-using UnityEditor.Build.Player;
-using System.Xml.Schema;
+
 
 public class LeaderboardManger : MonoBehaviour
 {
@@ -21,7 +19,7 @@ public class LeaderboardManger : MonoBehaviour
     {
         if (File.Exists("Assets/Save/Leaderboard.txt"))
         {
-            StreamReader sr = new StreamReader("Assets/Save/State.txt");
+            StreamReader sr = new StreamReader("Assets/Save/Leaderboard.txt");
             string previousScoresString = sr.ReadLine();
             string previousHealthString = sr.ReadLine();
             sr.Close();
@@ -48,31 +46,35 @@ public class LeaderboardManger : MonoBehaviour
         
     }
 
-    public (int[], int[]) LoadLeaderboard()
+    public (int[], float[]) LoadLeaderboard()
     {
-        StreamReader sr = new StreamReader("Assets/Save/State.txt");
-        string[] scoresString = sr.ReadLine().Split(",");
-        
-        int[] scores = new int[scoresString.Length];
-        for (int i=0; i < scoresString.Length; i++)
+        int[] scores = Array.Empty<int>();
+        float[] healths = Array.Empty<float>();
+        if (File.Exists("Assets/Save/Leaderboard.txt"))
         {
-            scores[i] = int.Parse(scoresString[i], CultureInfo.InvariantCulture);
+            StreamReader sr = new StreamReader("Assets/Save/Leaderboard.txt");
+            string[] scoresString = sr.ReadLine().Split(",");
+            scores = new int[scoresString.Length];
+            for (int i=0; i < scoresString.Length; i++)
+            {
+                scores[i] = int.Parse(scoresString[i], CultureInfo.InvariantCulture);
+            }
+            
+            string[] healthsString = sr.ReadLine().Split(",");
+            healths = new float[healthsString.Length];
+            for (int i=0; i < healthsString.Length; i++)
+            {
+                healths[i] = float.Parse(healthsString[i], CultureInfo.InvariantCulture);
+            }
         }
-        
-        string[] healthsString = sr.ReadLine().Split(",");
-        int[] healths = new int[healthsString.Length];
-        for (int i=0; i < scoresString.Length; i++)
-        {
-            healths[i] = int.Parse(healthsString[i], CultureInfo.InvariantCulture);
-        }
-        
+
 
         return (scores, healths);
     }
 
     public string GetLeaderboardText()
     {
-        (int[] scores, int[] health) = LoadLeaderboard();
+        (int[] scores, float[] health) = LoadLeaderboard();
 
         for (int cursor = 0;  cursor < scores.Length - 1; cursor++)
         {
@@ -81,7 +83,7 @@ public class LeaderboardManger : MonoBehaviour
                 if (scores[cursor] + health[cursor] < scores[i] + health[i])
                 {
                     int tmp1 = scores[cursor];
-                    int tmp2 = health[cursor];
+                    float tmp2 = health[cursor];
                     scores[cursor] = scores[i];
                     health[cursor] = health[i];
                     scores[i] = tmp1;
@@ -91,11 +93,11 @@ public class LeaderboardManger : MonoBehaviour
             }
         }
 
-        string leaderboard = "";
+        string leaderboard = "Leaderboard:" + Environment.NewLine;
 
         for (int i = 0; i < scores.Length; i++)
         {
-            leaderboard += (scores[i] + health[i]) + System.Environment.NewLine;
+            leaderboard += $"{scores[i] + health[i]}" + Environment.NewLine;
         }
 
         return leaderboard;

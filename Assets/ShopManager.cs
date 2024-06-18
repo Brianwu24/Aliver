@@ -8,7 +8,7 @@ public class ShopManager : MonoBehaviour
     public static ShopManager instance;
 
     public int coins = 300;
-    //public Upgrade[] upgrades;
+    public Upgrade[] upgrades;
 
     public Text coinText;
     public GameObject shopUI;
@@ -31,4 +31,19 @@ public class ShopManager : MonoBehaviour
         shopUI.SetActive(!shopUI.activeSelf);
     }
 
+    private void OnGuI()
+    {
+        coinText.text = "Coins:" + coins.ToString();
+    }
+    
+
+}
+
+[System.Serializable]
+public class Upgrade{
+    public string name;
+    public int cost;
+    public Sprite image;
+    [HideInInspector] public int quantity;
+    [HideInInspector] public GameObject itemRef;
 }

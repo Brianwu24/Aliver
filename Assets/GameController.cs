@@ -129,6 +129,11 @@ public class GameController : MonoBehaviour
         return _score;
     }
 
+    public void DecreaseScore(int scoreDec)
+    {
+        _score -= scoreDec;
+    }
+
     public void GenerateRandomPowerUp()
     {
         int randomNum = Random.Range(0, 3);

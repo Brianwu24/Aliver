@@ -184,6 +184,7 @@ public class GameController : MonoBehaviour
             sw.WriteLine($"{bulletPosition.x},{bulletPosition.y},{bulletDirectionSpeedVector.x},{bulletDirectionSpeedVector.y},{bullet.GetBulletType()}");
         }
         sw.Close();
+        LeaderboardManger.instance.SaveLeaderboard();
 
     }
 

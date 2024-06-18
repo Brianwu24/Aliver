@@ -14,6 +14,7 @@ public class PauseMenu : MonoBehaviour
 
     public void Home() {
         SceneManager.LoadScene(0);
+        LeaderboardManger.instance.SaveLeaderboard();
         Time.timeScale = 1;
     }
 

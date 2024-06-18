@@ -1,7 +1,5 @@
 using System;
-using TMPro;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
 
 public class BaseEnemy
 {
@@ -11,10 +9,12 @@ public class BaseEnemy
 
     public BaseEnemy(
         float health,
-        float damage)
+        float damage,
+        float speed)
     {
         _health = health;
         _damage = damage;
+        _speed = speed;
     }
 
     public float GetHealth()
@@ -42,6 +42,11 @@ public class BaseEnemy
         _health -= damage;
     }
 
+    public float GetSpeed()
+    {
+        return _speed;
+    }
+
     public virtual Vector3 Update(Vector3 speedDirectionVector, float distanceFromPlayer)
     {
         if (distanceFromPlayer <= 5)
@@ -57,7 +62,7 @@ public class BaseEnemy
 public class FastEnemy : BaseEnemy
 {
     private float _enragedSpeedMul;
-    public FastEnemy( float health, float damage, float enragedSpeedMul) : base(health, damage)
+    public FastEnemy( float health, float damage, float speed, float enragedSpeedMul) : base(health, damage, speed)
     {
         _enragedSpeedMul = enragedSpeedMul;
 
@@ -78,7 +83,7 @@ public class FastEnemy : BaseEnemy
 public class BigEnemy : BaseEnemy
 {
     private float _enragedSpeedMul;
-    public BigEnemy(float health, float damage, float enragedSpeedMul) : base(health, damage)
+    public BigEnemy(float health, float damage, float speed, float enragedSpeedMul) : base(health, damage, speed)
     {
         _enragedSpeedMul = enragedSpeedMul;
     }
@@ -101,7 +106,6 @@ public class EnemyController: MonoBehaviour
     
     private Rigidbody2D _rb;
     private Transform _transform;
-    private float _speed;
     private BaseEnemy _enemy;
 
     private string _enemyType;
@@ -121,18 +125,15 @@ public class EnemyController: MonoBehaviour
         _enemyType = type;
         if (type == "BaseEnemy")
         {
-            _speed = 1f;
-            _enemy = new BaseEnemy(2f, 1f);
+            _enemy = new BaseEnemy(2f, 1f, 1.5f);
         }
         else if (type == "FastEnemy")
         {
-            _speed = 3f;
-            _enemy = new FastEnemy(1f, 0.5f, 2f);
+            _enemy = new FastEnemy(1f, 0.5f,  3f,2f);
         }
         else if (type == "BigEnemy")
         {
-            _speed = 0.5f;
-            _enemy = new BigEnemy(20f, 2f, 1.5f);
+            _enemy = new BigEnemy(20f, 2f, 3f, 1.5f);
         }
             
     }
@@ -155,7 +156,7 @@ public class EnemyController: MonoBehaviour
     public void Move()
     {
         // Get the unit vector then mul by speed and game controller speed to determine enemy speed
-        _speedDirectionVector =  (GameController.instance.GetPlayerPosition() - _transform.position).normalized * (_speed * GameController.instance.GetEnemySpeed());
+        _speedDirectionVector =  (GameController.instance.GetPlayerPosition() - _transform.position).normalized * (_enemy.GetSpeed() * GameController.instance.GetEnemySpeed());
 
         this._rb.velocity = _speedDirectionVector;
     }
@@ -167,7 +168,7 @@ public class EnemyController: MonoBehaviour
 
     public float GetPriority()
     {
-        return (_speed * 2f) * (_enemy.GetHealth() * 0.05f) * (1/GetDistanceFromPlayer() * 100);
+        return (_enemy.GetSpeed() * 2f) * (_enemy.GetHealth() * 0.05f) * (1/GetDistanceFromPlayer() * 100);
     }
 
     public void OnCollisionEnter2D(Collision2D other)

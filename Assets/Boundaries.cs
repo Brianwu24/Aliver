@@ -8,6 +8,7 @@ public class Boundaries : MonoBehaviour {
     private float _objectWidth;
     private float _objectHeight;
     private float _xMargin = 6f;
+    private float _yMargin = -2f;
 
     // Use this for initialization
     void Start () {
@@ -20,7 +21,7 @@ public class Boundaries : MonoBehaviour {
     void LateUpdate(){
         Vector3 viewPos = transform.position;
         viewPos.x = Mathf.Clamp(viewPos.x, _screenBounds.x * -1 + _objectWidth + _xMargin, _screenBounds.x - _objectWidth - _xMargin);
-        viewPos.y = Mathf.Clamp(viewPos.y, _screenBounds.y * -1 + _objectHeight, _screenBounds.y - _objectHeight);
+        viewPos.y = Mathf.Clamp(viewPos.y, _screenBounds.y * -1 + _objectHeight + _yMargin, _screenBounds.y - _objectHeight - _yMargin);
         transform.position = viewPos;
     }
 }

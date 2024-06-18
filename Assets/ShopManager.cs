@@ -1,37 +1,34 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 using UnityEngine;
 
 public class ShopManager : MonoBehaviour
 {
+    public static ShopManager instance;
 
-    public GameObject Shop;
+    public int coins = 300;
+    //public Upgrade[] upgrades;
 
-    // Start is called before the first frame update
-    void Start()
+    public Text coinText;
+    public GameObject shopUI;
+
+    private void Awake()
     {
-        Shop = GetComponent<GameObject>();
-        if (Shop != null)
+        if(instance == null)
         {
-            Shop.SetActive(false);
+            instance = this;
+        }else
+        {
+            Destroy(gameObject);
         }
+
+        DontDestroyOnLoad(gameObject);     
     }
 
+    public void ToggleShop()
+    {
+        shopUI.SetActive(!shopUI.activeSelf);
+    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.B))
-        {
-            ToggleShop();
-        }
-    }
-    void ToggleShop()
-    {
-        if (Shop != null)
-        {
-            // Toggle the active state of the shop panel
-            Shop.SetActive(!Shop.activeSelf);
-        }
-    }
 }

@@ -93,11 +93,11 @@ public class LeaderboardManger : MonoBehaviour
             }
         }
 
-        string leaderboard = "Leaderboard:" + Environment.NewLine;
+        string leaderboard = "Leaderboard" + Environment.NewLine;
 
         for (int i = 0; i < scores.Length; i++)
         {
-            leaderboard += $"{scores[i] + health[i]}" + Environment.NewLine;
+            leaderboard += $"Score: {scores[i]} Health: {health[i]}" + Environment.NewLine;
         }
 
         return leaderboard;

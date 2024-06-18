@@ -52,6 +52,7 @@ public class LeaderboardManger : MonoBehaviour
     {
         StreamReader sr = new StreamReader("Assets/Save/State.txt");
         string[] scoresString = sr.ReadLine().Split(",");
+        
         int[] scores = new int[scoresString.Length];
         for (int i=0; i < scoresString.Length; i++)
         {

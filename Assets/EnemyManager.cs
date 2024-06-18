@@ -104,12 +104,11 @@ public class EnemyManager : MonoBehaviour
 
                     GameObject a = _enemies[cursor];
                     GameObject b = _enemies[i];
+                    // (_speed * 2f) * (_enemy.GetHealth() * 0.05f) * (1/GetDistanceFromPlayer() * 100);
                     if (a.GetComponent<EnemyController>().GetPriority() <
                         b.GetComponent<EnemyController>().GetPriority())
                     {
                         // What rider has in store for me, I decided not to use this!
-                        // (_enemies[cursor], _enemies[i]) = (_enemies[i], _enemies[cursor]);
-                        
                         // store in temp
                         GameObject temp = a; // This will be temp a
                         // Perform swap
@@ -120,11 +119,6 @@ public class EnemyManager : MonoBehaviour
                 }
             }
             return _enemies[0].transform.position;
-
-
-            // Sort based on priority calculated by a weighed sum of
-            // (enemy speed * 0.1) * (health 0.15) * (distance from player * 75)
-
         }
 
         return new Vector3(Random.Range(-10f, 10f), Random.Range(-10f, 10f));

@@ -2,9 +2,7 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-    public GameObject enemyManager;
-    private EnemyManager _enemyManager;
-
+    
     private string _type;
     private float _baseDamage;
     private Vector3 _directionSpeedVector;
@@ -14,7 +12,6 @@ public class Bullet : MonoBehaviour
     void Start()
     {
         _isAlive = true;
-        _enemyManager = enemyManager.GetComponent<EnemyManager>();
 
         _type = gameObject.name;
         _baseDamage = 1;

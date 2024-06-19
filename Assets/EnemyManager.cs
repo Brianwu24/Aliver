@@ -124,6 +124,30 @@ public class EnemyManager : MonoBehaviour
         return new Vector3(Random.Range(-10f, 10f), Random.Range(-10f, 10f));
         
     }
+
+    public void SetRandomEnemyEnraged()
+    {
+        int randomNum = Random.Range(1, 3);
+        string targetEnemy = "BaseEnemy";
+        if (randomNum == 1)
+        {
+            targetEnemy = "FastEnemy";
+        }
+        else
+        {
+            targetEnemy = "BigEnemy";
+        }
+        // Linear search for the first targetEnemy and set it as enraged
+        foreach (GameObject enemy in _enemies)
+        {
+            EnemyController enemyController = enemy.GetComponent<EnemyController>();
+            // Linear Searching for String, and checking if not enraged
+            if (enemyController.GetEnemyType() == targetEnemy && !enemyController.GetIfEnemyEnraged())
+            {
+                enemyController.SetEnemyEnraged();
+            }
+        }
+    }
     
 
     // Update is called once per frame

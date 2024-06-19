@@ -6,6 +6,7 @@ public class BaseEnemy
     private float _health;
     private float _damage;
     private float _speed;
+    protected Vector3 speedDirectionVector;
 
     public BaseEnemy(
         float health,
@@ -47,13 +48,18 @@ public class BaseEnemy
         return _speed;
     }
 
-    public virtual Vector3 Update(Vector3 speedDirectionVector, float distanceFromPlayer)
+    public void UpdateSpeedDirectionVector(Vector3 newSpeedDirectionVector)
     {
-        if (distanceFromPlayer <= 5)
-        {
-            return speedDirectionVector * 1.5f;
-        }
-        return speedDirectionVector;
+        this.speedDirectionVector = newSpeedDirectionVector;
+    }
+
+    public virtual void Update(float distanceFromPlayer){}
+    
+    public virtual void SetEnraged(){}
+
+    public Vector3 GetSpeedDirectionVector()
+    {
+        return this.speedDirectionVector;
     }
     
 }
@@ -67,15 +73,19 @@ public class FastEnemy : BaseEnemy
 
     }
 
-    public override Vector3 Update(Vector3 speedDirectionVector, float distanceFromPlayer)
+    public override void Update(float distanceFromPlayer)
     {
         // Override the base class' Update method
-        if (distanceFromPlayer <= 10)
+        if (distanceFromPlayer <= 2)
         {
-            return speedDirectionVector * _enragedSpeedMul;
+            this.speedDirectionVector *= _enragedSpeedMul;
         }
 
-        return speedDirectionVector;
+    }
+
+    public override void SetEnraged()
+    {
+        this.speedDirectionVector *= _enragedSpeedMul;
     }
 }
 
@@ -87,22 +97,22 @@ public class BigEnemy : BaseEnemy
         _enragedSpeedMul = enragedSpeedMul;
     }
     
-    public override Vector3 Update(Vector3 speedDirectionVector, float distanceFromPlayer)
+    public override void Update( float distanceFromPlayer)
     {
         // Override the base class' Update method
         if (distanceFromPlayer <= 2)
         {
-            return speedDirectionVector * _enragedSpeedMul;
+            speedDirectionVector *= _enragedSpeedMul;
         }
+    }
 
-        return speedDirectionVector;
+    public override void SetEnraged()
+    {
+        speedDirectionVector *= _enragedSpeedMul;
     }
 }
 public class EnemyController: MonoBehaviour
 { 
-    // Start is called before the first frame update
-    private Vector3  _speedDirectionVector;
-    
     private Rigidbody2D _rb;
     private Transform _transform;
     
@@ -110,14 +120,15 @@ public class EnemyController: MonoBehaviour
     private BaseEnemy _enemy;
 
     private string _enemyType;
+    private bool _enraged;
     
     
     void Start()
     {
         gameObject.SetActive(true);
         _rb = GetComponent<Rigidbody2D>();
-        
-        
+
+        _enraged = false;
         _transform = GetComponent<Transform>();
     }
     
@@ -130,7 +141,7 @@ public class EnemyController: MonoBehaviour
         }
         else if (type == "FastEnemy")
         {
-            _enemy = new FastEnemy(1f, 0.5f,  3f,2f);
+            _enemy = new FastEnemy(1f, 0.5f,  3f, 3f);
         }
         else if (type == "BigEnemy")
         {
@@ -154,12 +165,10 @@ public class EnemyController: MonoBehaviour
         return _enemy.GetDamage();
     }
     
-    public void Move()
+    public void Move(Vector3 speedDirectionVector)
     {
         // Get the unit vector then mul by speed and game controller speed to determine enemy speed
-        _speedDirectionVector =  (GameController.instance.GetPlayerPosition() - _transform.position).normalized * (_enemy.GetSpeed() * GameController.instance.GetEnemySpeed());
-
-        this._rb.velocity = _speedDirectionVector;
+        this._rb.velocity = speedDirectionVector;
     }
 
     public float GetDistanceFromPlayer()
@@ -187,16 +196,29 @@ public class EnemyController: MonoBehaviour
         {
             return _enemyType;
         }
-        else
-        {
-            return "BaseEnemy";
-        }
+        return "BaseEnemy";
+        
+    }
+
+    public void SetEnemyEnraged()
+    {
+        _enraged = true;
+    }
+
+    public bool GetIfEnemyEnraged()
+    {
+        return _enraged;
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        Move();
-        _enemy.Update(_speedDirectionVector, GetDistanceFromPlayer());
+        _enemy.UpdateSpeedDirectionVector((GameController.instance.GetPlayerPosition() - _transform.position).normalized * GameController.instance.GetEnemySpeed());
+        _enemy.Update(GetDistanceFromPlayer());
+        if (_enraged)
+        {
+            _enemy.SetEnraged();
+        }
+        Move(_enemy.GetSpeedDirectionVector());
     }
 }
